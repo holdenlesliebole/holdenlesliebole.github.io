@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Holden Leslie-Bole | Physical Oceanographer</title>
+  <meta name="description" content="Physical oceanographer specializing in wave dynamics, coastal geomorphology, sediment transport, and numerical modeling. Seeking industry roles in civil/mechanical engineering and consulting." />
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Lora:ital,wght@0,400;0,500;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <!-- ======= NAVBAR ======= -->
+  <nav class="navbar" id="navbar">
+    <div class="nav-container">
+      <a href="#home" class="nav-brand">HLB</a>
+      <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+      <ul class="nav-links" id="nav-links">
+        <li><a href="#about">About</a></li>
+        <li><a href="#projects">Projects</a></li>
+        <li><a href="#publications">Publications</a></li>
+        <li><a href="#cv">CV</a></li>
+        <li><a href="#contact" class="nav-cta">Contact</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- ======= HERO ======= -->
+  <section class="hero" id="home">
+    <div class="hero-content">
+      <p class="hero-eyebrow">Physical Oceanographer &amp; Applied Modeler</p>
+      <h1>Holden Leslie-Bole</h1>
+      <p class="hero-subtitle">
+        PhD candidate in physical oceanography specializing in wave dynamics, coastal geomorphology,
+        and sediment transport &mdash; translating fundamental fluid physics into actionable engineering solutions.
+      </p>
+      <div class="hero-actions">
+        <a href="#projects" class="btn btn-primary">View My Work</a>
+        <a href="assets/Holden_Leslie-Bole_CV.pdf" class="btn btn-outline" download>Download CV</a>
+      </div>
+      <div class="hero-pills">
+        <span class="pill">Fluid Dynamics</span>
+        <span class="pill">CFD &amp; Numerical Modeling</span>
+        <span class="pill">Digital Signal Processing</span>
+        <span class="pill">Remote Sensing</span>
+        <span class="pill">Coastal Engineering</span>
+        <span class="pill">Python &amp; MATLAB</span>
+      </div>
+    </div>
+    <div class="hero-wave" aria-hidden="true">
+      <svg viewBox="0 0 1440 100" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M0,50 C360,90 720,10 1080,50 C1260,70 1380,30 1440,50 L1440,100 L0,100 Z" fill="#F9F5EF"/>
+      </svg>
+    </div>
+  </section>
+
+  <!-- ======= ABOUT ======= -->
+  <section class="section" id="about">
+    <div class="container">
+      <div class="section-header">
+        <h2>About Me</h2>
+        <div class="section-rule"></div>
+      </div>
+      <div class="about-grid">
+        <div class="about-photo-col">
+          <div class="photo-placeholder"><span>Photo</span></div>
+          <div class="about-meta">
+            <p><strong>Status:</strong> PhD Candidate</p>
+            <p><strong>Field:</strong> Physical Oceanography</p>
+            <p><strong>Institution:</strong> [University Name]</p>
+            <p><strong>Available:</strong> [Expected graduation date]</p>
+          </div>
+        </div>
+        <div class="about-text-col">
+          <p class="about-lead">I am a physical oceanographer finishing my PhD with a focus on the mechanics of wave-coast interactions, coastal geomorphology, and sediment transport. My work bridges the gap between fundamental fluid physics and real-world engineering problems faced by coastal and hydraulic engineers.</p>
+          <p>My research combines analytical theory, high-fidelity numerical simulation (including CFD and spectral wave models), field instrumentation, and satellite remote sensing to understand how waves shape coastlines and drive sediment redistribution across scales from individual storm events to long-term geomorphic change. I am seeking roles in civil engineering, mechanical engineering, or environmental consulting where I can apply expertise in fluid mechanics, data analysis, and computational modeling to complex applied problems.</p>
+          <div class="skills-grid">
+            <div class="skill-group"><h4>Technical Expertise</h4><ul><li>Applied fluid dynamics &amp; hydraulics</li><li>Coastal &amp; nearshore processes</li><li>Sediment transport mechanics</li><li>Spectral wave modeling (SWAN, WAVEWATCH III)</li><li>Morphodynamic simulation (Delft3D, XBeach)</li></ul></div>
+            <div class="skill-group"><h4>Computational Skills</h4><ul><li>Python (NumPy, SciPy, xarray, Pandas)</li><li>MATLAB</li><li>Digital signal processing &amp; spectral analysis</li><li>Remote sensing &amp; GIS (Google Earth Engine)</li><li>HPC cluster workflows &amp; Git</li></ul></div>
+            <div class="skill-group"><h4>Domain Knowledge</h4><ul><li>Wave dynamics &amp; nonlinear wave theory</li><li>Coastal geomorphology &amp; beach evolution</li><li>Physical oceanography fieldwork &amp; instrumentation</li><li>Probabilistic hazard &amp; risk analysis</li><li>Scientific writing &amp; technical communication</li></ul></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======= PROJECTS ======= -->
+  <section class="section section-alt" id="projects">
+    <div class="container">
+      <div class="section-header"><h2>Projects &amp; Research</h2><div class="section-rule"></div><p class="section-desc">Selected research projects combining physical insight with computational methods to address real engineering and environmental challenges.</p></div>
+      <div class="projects-grid">
+        <article class="project-card"><div class="project-tag">Numerical Modeling / CFD</div><h3>Wave-Driven Sediment Transport in Energetic Coastal Environments</h3><p>Developed and validated a high-resolution morphodynamic model coupling spectral wave propagation with bed-load and suspended sediment transport. Reproduced field-observed bathymetric change at study sites along [Coast Name], enabling probabilistic forecasting of event-scale erosion.</p><div class="project-tools"><span>Delft3D</span><span>Python</span><span>ADCP data</span><span>Field validation</span></div><div class="project-links"><a href="#publications" class="project-link">Related Publication &rarr;</a></div></article>
+        <article class="project-card"><div class="project-tag">Remote Sensing</div><h3>Automated Shoreline Change Detection from Satellite Imagery</h3><p>Built a Python pipeline to extract multi-decadal shoreline positions from Landsat and Sentinel-2 imagery using sub-pixel edge detection. Applied to quantify erosion and accretion rates over [N] km of coastline and compared against numerical hindcasts.</p><div class="project-tools"><span>Python</span><span>Google Earth Engine</span><span>Sentinel-2 / Landsat</span></div><div class="project-links"><a href="https://github.com/holdenlesliebole" class="project-link" target="_blank" rel="noopener noreferrer">View on GitHub &rarr;</a></div></article>
+        <article class="project-card"><div class="project-tag">Signal Processing</div><h3>Nonlinear Energy Transfer in Infragravity Wave Dynamics</h3><p>Applied bispectral and wavelet methods to in-situ pressure and velocity time series to characterize nonlinear energy transfers between short-wave and infragravity frequency bands across the surf zone under varying storm conditions.</p><div class="project-tools"><span>MATLAB</span><span>Bispectral analysis</span><span>Wavelet transforms</span><span>Field data</span></div><div class="project-links"><a href="#publications" class="project-link">Related Publication &rarr;</a></div></article>
+        <article class="project-card"><div class="project-tag">Coastal Engineering</div><h3>Probabilistic Storm Impact Assessment for Coastal Infrastructure</h3><p>Conducted probabilistic wave run-up and overtopping analysis for a coastal structure using SWAN wave propagation and Monte Carlo simulation across a range of storm return periods, informing design recommendations.</p><div class="project-tools"><span>SWAN</span><span>Python</span><span>Monte Carlo</span><span>Risk analysis</span></div><div class="project-links"><a href="#contact" class="project-link">Request Details &rarr;</a></div></article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======= PUBLICATIONS ======= -->
+  <section class="section" id="publications">
+    <div class="container">
+      <div class="section-header"><h2>Publications</h2><div class="section-rule"></div><p class="section-desc">Peer-reviewed articles and conference proceedings. <a href="#" target="_blank" rel="noopener noreferrer">Full list on Google Scholar &rarr;</a></p></div>
+      <div class="pub-list">
+        <div class="pub-item"><div class="pub-year">2025</div><div class="pub-body"><p class="pub-title">[Title of your most recent journal article]</p><p class="pub-authors"><strong>Leslie-Bole, H.</strong>, Co-Author, A., &amp; Co-Author, B.</p><p class="pub-venue"><em>Journal of Geophysical Research: Oceans</em>, 130(X), e2024JC0XXXXX. <a href="#" class="pub-doi">[DOI link]</a></p><div class="pub-tags"><span>Coastal Morphology</span><span>Sediment Transport</span></div></div></div>
+        <div class="pub-item"><div class="pub-year">2024</div><div class="pub-body"><p class="pub-title">[Title of second article]</p><p class="pub-authors"><strong>Leslie-Bole, H.</strong>, &amp; Advisor, P. I.</p><p class="pub-venue"><em>Coastal Engineering</em>, 190, 104XXX. <a href="#" class="pub-doi">[DOI link]</a></p><div class="pub-tags"><span>Wave Modeling</span><span>CFD</span></div></div></div>
+        <div class="pub-item"><div class="pub-year">2023</div><div class="pub-body"><p class="pub-title">[Conference paper or earlier article title]</p><p class="pub-authors"><strong>Leslie-Bole, H.</strong>, Co-Author, A., &amp; Advisor, P. I.</p><p class="pub-venue"><em>Proceedings of Coastal Sediments 2023</em>, New Orleans, LA.</p><div class="pub-tags"><span>Signal Processing</span><span>Field Work</span></div></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======= CV ======= -->
+  <section class="section section-alt" id="cv">
+    <div class="container">
+      <div class="section-header"><h2>Curriculum Vitae</h2><div class="section-rule"></div></div>
+      <div class="cv-download-row"><a href="assets/Holden_Leslie-Bole_CV.pdf" class="btn btn-primary" download>Download Full CV (PDF)</a></div>
+      <div class="cv-columns">
+        <div class="cv-col"><h3>Education</h3>
+          <div class="cv-entry"><div class="cv-date">2020 &ndash; Present</div><div class="cv-content"><h4>PhD, Physical Oceanography</h4><p class="cv-org">[University Name]</p><p class="cv-detail">Advisor: Prof. [Name]</p><p class="cv-detail"><em>Dissertation: [Title of your dissertation]</em></p></div></div>
+          <div class="cv-entry"><div class="cv-date">20XX &ndash; 20XX</div><div class="cv-content"><h4>BS, [Undergraduate Field]</h4><p class="cv-org">[University Name]</p></div></div>
+        </div>
+        <div class="cv-col"><h3>Experience</h3>
+          <div class="cv-entry"><div class="cv-date">2020 &ndash; Present</div><div class="cv-content"><h4>Graduate Research Assistant</h4><p class="cv-org">[University Name / Lab Name]</p><p class="cv-detail">Conducted research in nearshore wave dynamics, sediment transport modeling, and remote sensing of coastal change.</p></div></div>
+          <div class="cv-entry"><div class="cv-date">[Year]</div><div class="cv-content"><h4>[Position Title]</h4><p class="cv-org">[Organization Name]</p><p class="cv-detail">[Brief description of role and contributions]</p></div></div>
+          <div class="cv-entry"><div class="cv-date">[Year]</div><div class="cv-content"><h4>Teaching Assistant</h4><p class="cv-org">[University Name]</p><p class="cv-detail">[Course name(s)]</p></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======= CONTACT ======= -->
+  <section class="section" id="contact">
+    <div class="container">
+      <div class="section-header"><h2>Get In Touch</h2><div class="section-rule"></div><p class="section-desc">I'm actively seeking roles in civil/mechanical engineering and consulting. Reach out for opportunities, collaborations, or to discuss my research.</p></div>
+      <div class="contact-grid">
+        <a href="mailto:your.email@university.edu" class="contact-card"><div class="contact-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M2 7l10 7 10-7"/></svg></div><div><h4>Email</h4><p>your.email@university.edu</p></div></a>
+        <a href="https://linkedin.com/in/[your-profile]" class="contact-card" target="_blank" rel="noopener noreferrer"><div class="contact-icon"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2z"/><circle cx="4" cy="4" r="2"/></svg></div><div><h4>LinkedIn</h4><p>linkedin.com/in/[your-profile]</p></div></a>
+        <a href="https://github.com/holdenlesliebole" class="contact-card" target="_blank" rel="noopener noreferrer"><div class="contact-icon"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg></div><div><h4>GitHub</h4><p>github.com/holdenlesliebole</p></div></a>
+        <a href="https://scholar.google.com/citations?user=[YOUR_ID]" class="contact-card" target="_blank" rel="noopener noreferrer"><div class="contact-icon contact-icon-gs">GS</div><div><h4>Google Scholar</h4><p>View Publications</p></div></a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======= FOOTER ======= -->
+  <footer class="footer">
+    <div class="container">
+      <p>&copy; 2026 Holden Leslie-Bole &mdash; Built with HTML &amp; CSS, hosted on <a href="https://pages.github.com" target="_blank" rel="noopener noreferrer">GitHub Pages</a>.</p>
+    </div>
+  </footer>
+
+  <script src="js/main.js"></script>
+</body>
+</html>
