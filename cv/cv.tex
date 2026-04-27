@@ -1,0 +1,381 @@
+%-----------------------------------------------------------------------------------------------------------------------------------------------%
+%	The MIT License (MIT)
+%
+%	Copyright (c) 2021 Jitin Nair
+%
+%	Permission is hereby granted, free of charge, to any person obtaining a copy
+%	of this software and associated documentation files (the "Software"), to deal
+%	in the Software without restriction, including without limitation the rights
+%	to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+%	copies of the Software, and to permit persons to whom the Software is
+%	furnished to do so, subject to the following conditions:
+%	
+%	THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+%	IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+%	FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+%	AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+%	LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+%	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+%	THE SOFTWARE.
+%	
+%
+%-----------------------------------------------------------------------------------------------------------------------------------------------%
+
+%----------------------------------------------------------------------------------------
+%	DOCUMENT DEFINITION
+%----------------------------------------------------------------------------------------
+
+% article class because we want to fully customize the page and not use a cv template
+\documentclass[a4paper,10pt]{article}
+
+%----------------------------------------------------------------------------------------
+%	FONT
+%----------------------------------------------------------------------------------------
+
+% % fontspec allows you to use TTF/OTF fonts directly
+% \usepackage{fontspec}
+% \defaultfontfeatures{Ligatures=TeX}
+
+% % modified for ShareLaTeX use
+% \setmainfont[
+% SmallCapsFont = Fontin-SmallCaps.otf,
+% BoldFont = Fontin-Bold.otf,
+% ItalicFont = Fontin-Italic.otf
+% ]
+% {Fontin.otf}
+
+%----------------------------------------------------------------------------------------
+%	PACKAGES
+%----------------------------------------------------------------------------------------
+\usepackage{url}
+\usepackage{parskip} 	
+
+%other packages for formatting
+\RequirePackage{color}
+\RequirePackage{graphicx}
+\usepackage[usenames,dvipsnames]{xcolor}
+\usepackage[scale=0.9]{geometry}
+
+%tabularx environment
+\usepackage{tabularx}
+
+%for lists within experience section
+\usepackage{enumitem}
+
+% centered version of 'X' col. type
+\newcolumntype{C}{>{\centering\arraybackslash}X} 
+
+%to prevent spillover of tabular into next pages
+\usepackage{supertabular}
+\usepackage{tabularx}
+\newlength{\fullcollw}
+\setlength{\fullcollw}{0.47\textwidth}
+
+%custom \section
+\usepackage{titlesec}				
+\usepackage{multicol}
+\usepackage{multirow}
+
+%CV Sections inspired by: 
+%http://stefano.italians.nl/archives/26
+\titleformat{\section}{\Large\scshape\raggedright}{}{0em}{}[\titlerule]
+\titlespacing{\section}{0pt}{6pt}{6pt}
+
+%for publications
+\usepackage[backend=bibtex,style=authoryear,sorting=ynt,maxbibnames=5,dashed=false]{biblatex}
+\renewbibmacro{in:}{}
+
+%Setup hyperref package, and colours for links
+\usepackage[unicode, draft=false]{hyperref}
+\definecolor{linkcolour}{rgb}{0,0.2,0.6}
+\hypersetup{colorlinks,breaklinks,urlcolor=linkcolour,linkcolor=linkcolour}
+\addbibresource{citations.bib}
+\setlength\bibitemsep{1em}
+
+%for social icons
+\usepackage{fontawesome5}
+
+%debug page outer frames
+%\usepackage{showframe}
+
+%----------------------------------------------------------------------------------------
+%	BEGIN DOCUMENT
+%----------------------------------------------------------------------------------------
+\begin{document}
+
+% non-numbered pages
+\pagestyle{empty} 
+
+%----------------------------------------------------------------------------------------
+%	TITLE
+%----------------------------------------------------------------------------------------
+
+% \begin{tabularx}{\linewidth}{ @{}X X@{} }
+% \huge{Your Name}\vspace{2pt} & \hfill \emoji{incoming-envelope} email@email.com \\
+% \raisebox{-0.05\height}\faGithub\ username \ | \
+% \raisebox{-0.00\height}\faLinkedin\ username \ | \ \raisebox{-0.05\height}\faGlobe \ mysite.com  & \hfill \emoji{calling} number
+% \end{tabularx}
+
+\begin{tabularx}{\linewidth}{@{} C @{}}
+\Huge{Holden Leslie-Bole} \\[7.5pt]
+\href{https://github.com/holdenlesliebole}{\raisebox{-0.05\height}\faGithub\ holdenlesliebole} \ $|$ \
+\href{https://www.linkedin.com/in/holdenlesliebole/}{\raisebox{-0.05\height}\faLinkedin\ holdenlesliebole} \ $|$ \
+\href{https://holdenlesliebole.github.io}{\raisebox{-0.05\height}\faGlobe \ holdenlesliebole.github.io} \ $|$ \
+\href{mailto:hlesliebole@ucsd.edu}{\raisebox{-0.05\height}\faEnvelope \ hlesliebole@ucsd.edu} \ $|$ \
+\href{tel:+19252553837}{\raisebox{-0.05\height}\faMobile \ +1 (925) 255-3837} \\
+\end{tabularx}
+
+%----------------------------------------------------------------------------------------
+% EXPERIENCE SECTIONS
+%----------------------------------------------------------------------------------------
+
+%Interests/ Keywords/ Summary
+\section{Research Interests}
+I am a physical oceanographer, engineer, and geologist working on applied and environmental fluid dynamics, with a dissertation focus on the mechanics of sandy beach change. My PhD investigates how waves drive cross-shore sediment redistribution and post-storm recovery on the San Diego County coastline, using synchronous \emph{in situ} hydrodynamic arrays, repeat topographic and bathymetric surveys, satellite-derived shoreline analysis, and analytical transport models. Alongside the coastal work I keep side projects in adjacent areas of fluid mechanics, including wall-bounded turbulence, surface-layer dynamics, and the general problem of the working distance between governing equations and what field data can resolve. I expect to carry this broader methodological toolkit into future applied and engineering work. My prior experience spans mechanical and civil engineering, climate physics, and international climate policy. I plan to sit for the California civil FE exam in 2026 and the PE exam in 2027.
+
+%----------------------------------------------------------------------------------------
+%	EDUCATION
+%----------------------------------------------------------------------------------------
+\section{Education}
+\textbf{Scripps Institution of Oceanography, UC San Diego} \hfill Sep 2021 - present\\[3.75pt]
+Ph.D., Physical Oceanography - expected 2027\\[3.75pt]
+M.S., Oceanography, 2022\\[3.75pt]
+Advisor: Dr. Mark Merrifield. Coastal Processes Group.\\[3.75pt]
+Prospectus (Oct 2025): \emph{Mechanics of cross-shore sediment transport and post-storm beach recovery at Torrey Pines.}\\[3.75pt]
+\textbf{Yale University} \hfill Aug 2014 - May 2018\\[3.75pt]
+B.S. Geology \& Geophysics \emph{with distinction}, B.S. Mechanical Engineering, 2018\\[3.75pt]
+Advisor: Dr. Alexey Fedorov\\[3.75pt]
+Thesis: \emph{Global Climate Impacts of the AMOC Slowdown Caused by Arctic Sea Ice Decline}
+%\begin{tabularx}{\linewidth}{@{}l X@{}}
+
+%\end{tabularx}
+
+%----------------------------------------------------------------------------------------
+%	SKILLS
+%----------------------------------------------------------------------------------------
+\section{Skills}
+\begin{tabularx}{\linewidth}{@{}l X@{}}
+%\multicolumn{2}{@{}X@{}}{
+\begin{minipage}[t]{\linewidth}
+    \begin{itemize}[nosep,after=\strut, leftmargin=1em, itemsep=3pt]
+        \item[--] \textbf{Programming:} MATLAB (primary), Python, Bash, Git, HTML/CSS, NCL, Mathematica, C, Fortran, Java
+        \item[--] \textbf{Tools:} \LaTeX, CoastSeg, CoastSat, SWAN, Delft3D FM, XBeach, NumPy, SciPy, xarray, Pandas, Scikit-learn, PyTorch, GMT, QGIS, ArcGIS, Google Earth Engine, ENVI, Ansys, SolidWorks, AutoCAD, Rhino3D. Strong writing skills in climate policy \& law
+        \item[--] \textbf{Teaching:} Lectures on climate dynamics, ecology, and climate policy to international audiences (at Carbon Institute); TA for Environmental Communication for Public Policy, Advanced Science Communication (at Yale); private tutoring of middle and high school chemistry, physics, calculus, and statistics
+        \item[--] \textbf{Spoken Languages:} English (native), Spanish (professionally proficient), French (familiar)
+        \item[--] \textbf{Hobbies:} Strategy games (poker, chess), jazz saxophone, outdoor sports (cycling, running, skiing, and surfing)
+        \item[--] \textbf{Other:} Strong background in environmental consulting, policy analysis, public speaking, and mentorship
+    \end{itemize}
+    \end{minipage}
+    %}
+\end{tabularx}
+%\center{\footnotesize Last updated: \today}
+
+%Research Experience
+\section{Work Experience}
+
+\textbf{Scripps Institution of Oceanography, UC San Diego} - Graduate Student Researcher \hfill Sep 2021 - present \\[3.75pt]
+\begin{tabularx}{\linewidth}{ @{}l r@{} }
+\multicolumn{2}{@{}X@{}}{\emph{Coastal Processes Group. Advisor: Dr. Mark Merrifield}}\\[3.75pt]
+\multicolumn{2}{@{}X@{}}{
+\begin{minipage}[t]{\linewidth}
+    \begin{itemize}[nosep,after=\strut, leftmargin=1em, itemsep=3pt]
+        \item[--] \emph{TBR23 field campaign (Torrey Pines, 2022--2023).} Designed and executed a year-long synchronous deployment of cross-shore PUV arrays, jet-ski and vessel sonar, and truck/ATV LiDAR to capture beach stripping by the 2022--2023 atmospheric river winter and the subsequent summer recovery. Built processing pipelines from raw pressure and velocity signals through sediment-transport estimates.
+        \item[--] \emph{Paper 1 (in preparation, JGR: Oceans).} Depth-dependent cross-shore sediment transport and post-storm beach recovery; tests canonical energetics and wave-asymmetry formulations against observed bathymetric change.
+        \item[--] \emph{Paper 2 (in preparation).} Dominant modes of seasonal beach morphology evolution at Torrey Pines from multi-year survey records, with emphasis on the asymmetry between winter erosion and summer recovery.
+        \item[--] \emph{Paper 3 (in preparation).} Satellite-derived shoreline timeseries across San Diego County and Ensenada using CoastSeg / Sentinel-2, validated against \emph{in situ} LiDAR.
+        \item[--] Toolbox work: wave shoaling dynamics from PUV observations, alongshore transport formulations, a collaborative grain-size sampling campaign across San Diego County beaches, and continued critique of equilibrium beach models.
+        \item[--] Earlier: trained a supervised maximum-likelihood classifier for sub-pixel shoreline detection from satellite imagery using superresolution methods, validated against LiDAR surveys; developed an oceanographic data dashboard for resource managers in the Maldives.
+    \end{itemize}
+    \end{minipage}
+}
+\end{tabularx}
+
+\begin{tabularx}{\linewidth}{ @{}l r@{} }
+\textbf{The Carbon Institute} - Program Officer & \hfill Dec 2018 - Oct 2019 \\[3.75pt]
+Senior Program Officer & \hfill Oct 2019 - Feb 2021 \\[3.75pt]
+\multicolumn{2}{@{}X@{}}{
+\begin{minipage}[t]{\linewidth}
+    \begin{itemize}[nosep,after=\strut, leftmargin=1em, itemsep=3pt]
+        \item[--] Trained 151 professionals in terrestrial carbon accounting and natural climate solutions in China and Indonesia as deputy to Executive Director on €2.0MM project. Wrote national implementation plans for sustainable capacity development in decarbonization and transparency coordinating with governments, academia, foundations, intraregional organizations, and United Nations Framework Convention on Climate Change.
+        \item[--] Wrote policy memos on enhancing coordination on ocean and coastal issues for G77 negotiators at United Nations Framework Convention on Climate Change COP22 through COP25 conferences. Ran Twitter account @ParisAgreement tracking negotiations, with 13.2k followers.
+        \item[--] Developed grants, led fundraising, and oversaw proposal development representing \$36M of multinational project work.
+    \end{itemize}
+    \end{minipage}
+}
+\end{tabularx}
+
+\textbf{Yale University} - Undergraduate Researcher \hfill Sep 2015 - Nov 2018 \\[3.75pt]
+\begin{tabularx}{\linewidth}{ @{}l r@{} }
+\multicolumn{2}{@{}X@{}}{\emph{Department of Geology \& Geophysics}}\\[3.75pt]
+\multicolumn{2}{@{}X@{}}{
+\begin{minipage}[t]{\linewidth}
+    \begin{itemize}[nosep,after=\strut, leftmargin=1em, itemsep=3pt]
+        \item[--] Simulated changes in global climate dynamics due to Atlantic Meridional Overturning Circulation decline linked to Arctic sea-ice loss using NCAR Community Earth System Model.
+        \item[--] Reconstructed Miocene paleotopographies from hydrogen isotope fractionation preserved in volcanic glass.
+        \item[--] Sampled stromatolitic sedimentary formations to infer atmospheric chemistry during the Great Oxygenation Event.
+    \end{itemize}
+    \end{minipage}
+}
+\end{tabularx}
+
+\textbf{National Center for Atmospheric Research} - Student Researcher \hfill May 2017 - Sep 2017 \\[3.75pt]
+\begin{tabularx}{\linewidth}{ @{}l r@{} }
+\multicolumn{2}{@{}X@{}}{\emph{Atmospheric Chemistry Observations and Modeling Group}}\\[3.75pt]
+\multicolumn{2}{@{}X@{}}{
+\begin{minipage}[t]{\linewidth}
+    \begin{itemize}[nosep,after=\strut, leftmargin=1em, itemsep=3pt]
+        \item[--] Analyzed impacts of tropical forest fires on regional and global air quality using carbon monoxide atmospheric loading as observed by MOPITT gas correlation spectroscopy satellite instrument. Found correlation between carbon monoxide outflow from Amazon basin fires and El Niño events.
+        \item[--] Rectified data with high accuracy to produce complete timeseries after partial sensor failure.
+    \end{itemize}
+    \end{minipage}
+}
+\end{tabularx}
+
+\begin{tabularx}{\linewidth}{ @{}l r@{} }
+\textbf{Overland Summers} - Wilderness Trip Leader & \hfill Jun 2018 - Aug 2018 \\[3.75pt]
+\multicolumn{2}{@{}X@{}}{
+\begin{minipage}[t]{\linewidth}
+    \begin{itemize}[nosep,after=\strut, leftmargin=1em, itemsep=3pt]
+        \item[--] Guided high school students in the Alaskan wilderness on a leadership development, teambuilding, and backpacking outdoor education course. Skills taught included ice climbing, glacier travel, mountaineering, Wilderness First Aid, and Leave No Trace ethics.
+    \end{itemize}
+    \end{minipage}
+}
+\end{tabularx}
+
+\begin{tabularx}{\linewidth}{ @{}l r@{} }
+\textbf{CEDESOL (Cochabamba, Bolivia)} - Mechanical Engineer & \hfill Jun 2016 - Aug 2016 \\[3.75pt]
+\multicolumn{2}{@{}X@{}}{
+\begin{minipage}[t]{\linewidth}
+    \begin{itemize}[nosep,after=\strut, leftmargin=1em, itemsep=3pt]
+        \item[--] Designed and supported distribution of a forced-air clean cookstove in conjunction with electrification efforts for rural Bolivian communities.
+        \item[--] Deployed asset-based community development strategies to identify areas to maximize social, health, environmental, and economic benefits in rural food production and distribution systems.
+        \item[--] Intensive study of Spanish language.
+    \end{itemize}
+    \end{minipage}
+}
+\end{tabularx}
+
+\begin{tabularx}{\linewidth}{ @{}l r@{} }
+\textbf{MKThink} - Architecture Intern & \hfill May 2015 - August 2015 \\[3.75pt]
+\multicolumn{2}{@{}X@{}}{
+\begin{minipage}[t]{\linewidth}
+    \begin{itemize}[nosep,after=\strut, leftmargin=1em, itemsep=3pt]
+        \item[--] Redesigned the interiors of two buildings in the Stanford Graduate School of Education for optimized space use.
+        \item[--] Developed proprietary pedestrian traffic simulation software based on behavioral dynamics.
+    \end{itemize}
+    \end{minipage}
+}
+\end{tabularx}
+
+\begin{tabularx}{\linewidth}{ @{}l r@{} }
+\textbf{University of California San Francisco} - Engineering Intern & \hfill May 2012 - August 2013 \\[3.75pt]
+\multicolumn{2}{@{}X@{}}{\emph{Department of Bioengineering and Therapeutic Sciences}}\\[3.75pt]
+\multicolumn{2}{@{}X@{}}{
+\begin{minipage}[t]{\linewidth}
+    \begin{itemize}[nosep,after=\strut, leftmargin=1em, itemsep=3pt]
+        \item[--] Designed and fabricated an implantable fetal device for treatment of congenital diaphragmatic herniation.
+        \item[--] Redesigned flow cells to test membranes for hemofiltration module of implantable artificial kidney.
+        \item[--] Tested commercial dialyzers for comparison to proprietary membranes in hemofiltration module.
+    \end{itemize}
+    \end{minipage}
+}
+\end{tabularx}
+
+\begin{tabularx}{\linewidth}{ @{}l r@{} }
+\textbf{Ladd Hill Orchards} - Orchard Worker & \hfill 1996 - present \\[3.75pt]
+\multicolumn{2}{@{}X@{}}{
+\begin{minipage}[t]{\linewidth}
+    \begin{itemize}[nosep,after=\strut, leftmargin=1em, itemsep=3pt]
+        \item[--] Raised in a family farming business dedicated to growing 10+ tons annually of USDA-certified organic chestnuts for wholesale and retail customers.
+        \item[--] Experience includes nut processing line operation, agricultural supply chain management, customer fulfillment, heavy equipment operation (forklift, mower, tractor, bulldozer, commercial truck), large-scale irrigation, welding, machining, roofing, siding, drywall, flooring, framing, HVAC, plumbing and electrical, painting, controlled burn management, and machinery repair.
+    \end{itemize}
+    \end{minipage}
+}
+\end{tabularx}
+
+%Projects
+\section{Presentations and Posters}
+
+\begin{refsection}[presentations.bib]
+\nocite{*}
+\printbibliography[heading=none]
+\end{refsection}
+
+%----------------------------------------------------------------------------------------
+%	PUBLICATIONS
+%----------------------------------------------------------------------------------------
+\section{Articles}
+\begin{refsection}[citations.bib]
+\nocite{*}
+\printbibliography[heading=none]
+%\printbibheading
+%\printbibliography[keyword=paper,heading=subbibliography,title={Articles}]
+%\printbibliography[keyword=pres,heading=subbibliography,title={Presentation and Posters}]
+\end{refsection}
+
+%Awards
+\section{Honors and Awards}
+    \textbf{SIO Department Award} \hfill 2023, 2025 \\[3.75pt]
+    Selected to receive department fellowship to support research and travel. \\[3.75pt]
+    \textbf{Logitech Travel Grant (Scripps)} \hfill 2022\\[3.75pt]
+    Nominated and funded to attend UN COP27 international climate change conference in Sharm El-Sheikh, Egypt.\\[3.75pt]
+    \textbf{Office of Naval Research Graduate Research Fellowship} \hfill 2022--2025\\[3.75pt]
+    Three-year fellowship for research on satellite-based remote sensing of coastal change.\\[3.75pt]
+    \textbf{Cody-Doherty Fellowship (Scripps)} \hfill 2021\\[3.75pt]
+    Selected out of 77 incoming students to receive department fellowship for first year funding.\\[3.75pt]
+    \textbf{Pat Wilde Prize (Yale)} \hfill 2018\\[3.75pt]
+    In recognition of excellence in marine geology and oceanography for senior thesis.\\[3.75pt]
+    \textbf{Yale Climate Day Prize} \hfill 2018\\[3.75pt]
+    In recognition of excellence in climate-related research from NCAR presented at Yale.\\[3.75pt]
+    \textbf{Yale Environmental Studies Travel Grant} \hfill 2016, 2017\\[3.75pt]
+    Funded attendance at UN COP22 and COP23 international climate change conferences in Marrakech, Morocco and Bonn, Germany.
+
+%Mentoring
+\section{Mentoring}
+    \textbf{Alexis Vargas} - Undergraduate at Eckerd College \hfill 2023\\[3.75pt]
+    \textbf{Alustriel Keech} - Undergraduate at Arizona State University \hfill 2022-2023\\[3.75pt]
+    \textbf{Tommy Nguyen} - Undergraduate at College of the Holy Cross \hfill 2022-2023\\[3.75pt]
+    \textbf{Shayna Grossman} - Undergraduate at Harvard University \hfill 2022\\[3.75pt]
+    \textbf{Emma Levin} - Undergraduate at Yale University \hfill 2020-2022\\[3.75pt]
+    \textbf{Clara Ma} - Undergraduate at Yale University \hfill 2018-2020
+    
+%Service
+\section{Activities and Leadership}
+\begin{tabularx}{\linewidth}{@{}l X@{}}
+%\multicolumn{2}{@{}X@{}}{
+\begin{minipage}[t]{\linewidth}
+    \begin{itemize}[nosep,after=\strut, leftmargin=1em, itemsep=3pt]
+        \item[--] \textbf{Eastern Pacific Cloud Aerosol Precipitation Experiment} - Weather balloon launcher \hfill 2023
+        \item[--] \textbf{Scripps Climate, Atmospheric Science, and Physical Oceanography seminar} - Lead organizer \hfill 2022-2023
+        \item[--] \textbf{University of California Disaster Resilience Network} - Graduate student representative \hfill 2022-2023
+        \item[--] \textbf{North Park Planning Committee} - Chair, Public Facilities and Transportation Subcommittee \hfill 2024-2026
+        \item[--] \textbf{Geosciences Education \& Mentorship Support} - Peer mentor for undergraduates \hfill 2021-2023
+        \item[--] \textbf{Sunrise Movement} - Community organizer \hfill 2019-2023
+        \item[--] \textbf{OCEANS Conference \& Exposition} - Student volunteer \hfill 2021
+        \item[--] \textbf{Yale Club Geo} - President. \hfill 2017-2018
+        \item[--] \textbf{Yale Tsai Center for Innovative Thinking} - Student Advisory Board Member \hfill 2016-2018
+        \item[--] \textbf{Yale First-Year Outdoor Orientation Trips} First Aid Director and Trip Leader \hfill 2015-2018
+        \item[--] \textbf{Yale West Campus Advisory Board}, Student representative \hfill 2015-2018
+        \item[--] \textbf{Yale Bulldogs Racing Formula SAE Team}, Lead Mechanical Engineer \hfill 2014-2017
+        
+%}
+    \end{itemize}
+    \end{minipage}
+    %}
+\end{tabularx}
+
+%\item[--] \textbf{Airplane Construction Projects} Built a Christen Eagle II, a two-passenger biplane, from a kit and sold it to a private buyer when completed (2007 – 2011). Built a Vans RV-12, a two-passenger single wing aircraft, from a kit (2012 – 2014)
+ %       \item[--] \textbf{Electric Car Conversion} Converted a 1989 gasoline-powered Honda Civic to electric power. Designed battery circuitry, motor adaptor, and battery mounts; machined and installed the components
+%{Bulldogs Racing Team, Lead Mechanical Engineer -Designed and fabricated suspension, brakes, and powertrain of Formula SAE Electric racecar
+  
+%{Complete Automotive Restoration
+%Orinda, California | 2011 – 2017
+%-Restored and modified a 1971 Datsun 240z that had been crashed and had not run for 25 years
+%FIRST Robotics
+%San Jose and Davis, California | 2012 – 2014
+%-Led mechanical design and CAD modeling of robot
+%-Led robot fabrication team using mills, lathes, TIG welders, and other shop tools
+
+
+
+\end{document}

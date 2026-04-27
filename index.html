@@ -1,0 +1,225 @@
+---
+layout: default
+title: ""
+description: "Holden Leslie-Bole, physical oceanographer at Scripps Institution of Oceanography, UC San Diego. Applied fluid dynamics, beach morphodynamics, cross-shore sediment transport, wave–coastline interactions."
+math: true
+---
+
+<!-- ======= HERO BANNER ======= -->
+<figure class="page-hero" aria-hidden="true">
+  <img src="{{ '/assets/images/torrey-pines-sunset.jpg' | relative_url }}" alt="" />
+</figure>
+
+<!-- ======= ABOUT ======= -->
+<section id="about" class="about">
+  <div class="about-grid">
+    <figure class="about-photo">
+      <img src="{{ '/assets/images/headshot.jpg' | relative_url }}" alt="Portrait of Holden Leslie-Bole" />
+    </figure>
+    <div class="about-text">
+      <p class="lead">
+        I am a PhD candidate in physical oceanography at <a href="https://scripps.ucsd.edu/">Scripps Institution of Oceanography</a>, UC San Diego, working with <a href="https://mamerrifield.scrippsprofiles.ucsd.edu">Mark Merrifield</a> in the <a href="https://siocpg.ucsd.edu">Coastal Processes Group</a>. I am interested in environmental fluid dynamics, including wave-driven flows, boundary-layer dynamics, transport phenomena, and turbulence, as well as applications of the governing equations to measurements from marine field instrumentation.
+      </p>
+      <p>
+        My dissertation research focuses on the mechanics of cross-shore sediment transport, post-storm beach recovery, and wave&ndash;coastline interactions along the San Diego County coastline. I combine <em>in situ</em> hydrodynamic instrumentation, sonar and LiDAR surveys, satellite remote sensing, and analytical and numerical modeling to understand how sandy beaches evolve across scales, from individual storm events to multi-year morphodynamic cycles. 
+      </p>
+      <p>
+        Before Scripps I earned my B.S. in Geology &amp; Geophysics and Mechanical Engineering from Yale (2018), and spent several years working on international climate policy at <a href="https://carboninstitute.org/">The Carbon Institute</a>. I'm broadly curious about applied coastal problems (erosion hazard, nourishment design, sea-level rise adaptation), and plan to sit for the California civil FE in summer 2026.
+      </p>
+      <p class="contact-line">
+        <a href="mailto:hlesliebole@ucsd.edu">hlesliebole@ucsd.edu</a>
+        <span class="sep">&middot;</span>
+        <a href="https://github.com/holdenlesliebole">github</a>
+        <span class="sep">&middot;</span>
+        <a href="https://www.linkedin.com/in/holdenlesliebole/">linkedin</a>
+        <span class="sep">&middot;</span>
+        <a href="https://scholar.google.com/citations?user=">google scholar</a>
+        <span class="sep">&middot;</span>
+        <a href="{{ '/assets/Holden_Leslie-Bole_CV.pdf' | relative_url }}">CV (PDF)</a>
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ======= RESEARCH ======= -->
+<section id="research">
+  <h2>Research</h2>
+  <p class="section-intro">
+    My dissertation, <em>On beach accretion, erosion, and morphodynamic change in Southern California and Northern Baja California</em>, asks how waves and tides redistribute sand in nearshore beach systems across depth, across seasons, and across decades, and why observations so often outrun the existing models we use to predict them. Three principal chapters sit at the center of the work, plus a shorter collaborative chapter on regional sediment character.
+  </p>
+
+  <article class="research-item">
+    <div class="research-thumb">
+      <img src="{{ '/assets/images/paper1_composite_elevations.png' | relative_url }}" alt="Composite elevation-change maps across TBR23 survey intervals at MOP 576–590, showing depth-partitioned recovery." />
+    </div>
+    <div class="research-body">
+      <h3>Depth-dependent cross-shore sediment transport and post-storm beach recovery</h3>
+      <p class="research-meta">Paper 1 &middot; in preparation for <em>JGR: Oceans</em></p>
+      <p>
+        The 2022&ndash;2023 atmospheric river winter (17 landfalling ARs at the tail of a triple-dip La Ni&ntilde;a) stripped Torrey Pines of its subaerial berm. The TBR23 field campaign (synchronous PUV arrays at nominal 5 and 7 m depth across two transects, jet-ski and vessel sonar, truck and ATV LiDAR) captured the recovery through summer 2023. Summer accretion turned out to be strongly depth-partitioned: onshore transport was confined shallower than about 4 m depth, while a large sand pad on the outer shoreface (4&ndash;8 m) remained essentially immobile under typical summer waves. I test how well Bailard energetics, wave-asymmetry terms, and an undertow correction reproduce this asymmetric cross-shore signature, and introduce a diagnostic cubic energy-flux proxy that captures it parsimoniously.
+      </p>
+    </div>
+  </article>
+
+  <article class="research-item">
+    <div class="research-thumb">
+      <img src="{{ '/assets/images/paper2_profile_rank.png' | relative_url }}" alt="Ranked cross-shore profile heatmap from MOP586, ordered by sandbar crest position." />
+    </div>
+    <div class="research-body">
+      <h3>Profile modes, sandbar migration, and deep-offshore sediment motion</h3>
+      <p class="research-meta">Paper 2 &middot; in preparation</p>
+      <p>
+        The 2022&ndash;2023 altimeter failure was not repeated: an 18-month cross-shore array at MOP586 (PUVs, altimeters, and echosounders at 5, 7, 10, and 15 m depth) caught the 2023&ndash;2024 El Ni&ntilde;o winter and the recovery through 2025. I fold that record into the 1997&ndash;2025 Torrey Pines survey archive. EOF decomposition resolves the dominant cross-shore profile modes; wavelet and cross-wavelet analyses link them to wave forcing across event, seasonal, and interannual scales; the bar-scale altimeter records expose the migration and welding dynamics underneath. The question I want to answer: what minimum-complexity reduced-order model captures it all, across state transitions?
+      </p>
+    </div>
+  </article>
+
+  <article class="research-item">
+    <div class="research-thumb">
+      <img src="{{ '/assets/images/paper3_diffusion_model.jpg' | relative_url }}" alt="Schematic of the physics-informed diffusion model: forward training adds noise to observed morphology with conditional wave/tide forcing; reverse generation produces predicted morphology from noise under specified forcing." />
+    </div>
+    <div class="research-body">
+      <h3>Decadal-scale morphodynamic variability across binational coastal sites</h3>
+      <p class="research-meta">Paper 3 &middot; in preparation, with MORDICS (UABC)</p>
+      <p>
+        A 13-year record of topographic and bathymetric surveys across eight binational sites (Torrey Pines, Solana Beach, Cardiff, and La Jolla Shores in San Diego County; La Misi&oacute;n, Playa de Ensenada, Barro del Estero, and El Cipr&eacute;s in Baja California) together with coincident wave hindcasts and sea-level anomalies. EOF modes of the decadal profile record are correlated against ENSO, PDO, and wave-climate indices to identify what persists across sites and what is genuinely local. A physics-informed generative diffusion model (work in collaboration) emulates the trained profile response and lets us run forward under counterfactual wave climates. This chapter situates the process-level work of Papers 1 and 2 within a regional, binational, decadal frame.
+      </p>
+    </div>
+  </article>
+
+  <article class="research-item">
+    <div class="research-thumb">
+      <img src="{{ '/assets/images/paper4_sampling.jpg' | relative_url }}" alt="Map of intertidal grain-size sampling stations across three Southern California littoral cells, from Dana Point south to Border Field." />
+    </div>
+    <div class="research-body">
+      <h3>Alongshore distribution of beach sediment grain sizes across Southern California</h3>
+      <p class="research-meta">Chapter 4 &middot; collaborative appendix</p>
+      <p>
+        A regional grain-size campaign spanning 120 km of coast from Dana Point south to Border Field, crossing three Southern California littoral cells. I'm collecting and analysing intertidal sediment at high alongshore resolution, fitting D3, D50, and D97 distributions to characterise not just median texture but the tails that sediment-transport formulations are most sensitive to. The alongshore patterns are compared against proximity to fluvial inputs, sandstone-cliff sources, canyon heads, and engineered transport barriers, with the output intended as a regional input layer for transport-model calibration. Short appendix chapter, joint with collaborators.
+      </p>
+    </div>
+  </article>
+
+  <div class="research-future">
+    <h3>Coastal tangents</h3>
+    <ul>
+      <li>Failure modes of equilibrium beach models: why simple Dean-profile formulations miss so much.</li>
+      <li>Alongshore transport formulations derived from PUV arrays.</li>
+      <li>A grain-size sampling campaign across San Diego County beaches (collaborative).</li>
+      <li>Wave shoaling dynamics from PUV observations.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ======= OTHER INTERESTS ======= -->
+<section id="interests">
+  <h2>Other Interests</h2>
+  <p class="section-intro">
+    My dissertation centers on coastal sediment transport, but the questions that keep pulling at me sit in a broader box: applied and environmental fluid dynamics, and the working distance between governing equations and what field data can actually reveal. A few threads I keep alongside the coastal work, and expect to carry into future projects.
+  </p>
+
+  <article class="interest-item">
+    <h3>A curvature-like diagnostic for wall-bounded turbulence</h3>
+    <p>
+      An exact diagnostic that repackages the streamwise Reynolds-stress divergence as a curvature-like inverse-length scalar,
+      \[
+        \kappa(y) \;=\; \frac{1}{\overline{U}^2(y)}\,\frac{d\overline{u'v'}}{dy},
+      \]
+      tested against laminar Poiseuille flow, the log layer, Reichardt's and Spalding's wall laws, and turbulent pipe-flow analogues. It is a visualization and comparison tool, not a turbulence closure, but it compresses the stress-gradient field into a single inverse-length quantity that can be plotted in wall units and compared across channel, pipe, and boundary-layer geometries. <a href="{{ '/notes/turbulence-curvature-diagnostic/' | relative_url }}">Read the note &rarr;</a>
+    </p>
+  </article>
+
+  <p class="section-aside">
+    More side projects will show up here as they mature into written form. Adjacent problems I am broadly curious about: wind-driven mixed-layer dynamics, urban stormwater and flood risk, sediment and contaminant transport in estuaries, and atmospheric boundary layers in complex terrain.
+  </p>
+</section>
+
+<!-- ======= PUBLICATIONS ======= -->
+<section id="publications">
+  <h2>Publications &amp; Reports</h2>
+  <ol class="pub-list">
+    <li class="pub-item">
+      <p class="pub-title">Interannual wave-driven shoreline change on the California coast</p>
+      <p class="pub-auth">W. C. O'Reilly, M. A. Merrifield, L. Cagigal, D. Yoon, <strong>H. Leslie-Bole</strong>, S. Adusumilli, A. P. Young, K. Vos, R. T. Guza.</p>
+      <p class="pub-venue"><em>Nature Communications</em> 16, 9967 (2025). <a href="https://doi.org/10.1038/s41467-025-65944-0">doi:10.1038/s41467-025-65944-0</a></p>
+    </li>
+    <li class="pub-item">
+      <p class="pub-title">Beach recovery after extreme atmospheric river storm events in Southern California</p>
+      <p class="pub-auth"><strong>H. Leslie-Bole</strong>, W. O'Reilly, R. T. Guza, M. A. Merrifield.</p>
+      <p class="pub-venue"><em>In preparation</em> for JGR: Oceans, 2026.</p>
+    </li>
+    <li class="pub-item">
+      <p class="pub-title">Dynamics of carbon stored by kelp in California: synthesis report &amp; preliminary model of carbon storage</p>
+      <p class="pub-auth"><strong>H. Leslie-Bole</strong>, J. O. Niles.</p>
+      <p class="pub-venue">Joint Carbon Institute / The Nature Conservancy White Paper, 2020. <a href="https://tinyurl.com/TNCTCIKelpWhitePaper">[link]</a></p>
+    </li>
+    <li class="pub-item">
+      <p class="pub-title">Submission of views of the Carbon Institute to the SBSTA Chair's dialogue on the ocean and climate change</p>
+      <p class="pub-auth"><strong>H. Leslie-Bole</strong>, J. O. Niles.</p>
+      <p class="pub-venue">UNFCCC SBSTA Dialogue on the Ocean and Climate Change, 2020. <a href="https://tinyurl.com/OceanClimateDialogue">[link]</a></p>
+    </li>
+  </ol>
+</section>
+
+<!-- ======= TALKS ======= -->
+<section id="talks">
+  <h2>Talks &amp; Posters</h2>
+  <ul class="talk-list">
+    <li><span class="talk-year">2025</span> <span class="talk-body">AGU Fall Meeting &middot; Scripps Departmental Seminar &middot; National Practice Forum on Nature-Based Solutions</span></li>
+    <li><span class="talk-year">2024</span> <span class="talk-body">YCSECA, Qu&eacute;bec City &middot; Smart Coast</span></li>
+    <li><span class="talk-year">2023</span> <span class="talk-body">
+      <em>Mechanisms of onshore sediment transport on a mesotidal barred beach.</em> AGU Fall Meeting.<br />
+      <em>Dynamics of post-storm beach recovery: insights from Torrey Pines 2023.</em> USACE Engineer Research and Development Center.<br />
+      <em>When the sea swallows San Diego's coasts, where will we live?</em> Voice of San Diego Politifest.
+    </span></li>
+    <li><span class="talk-year">2022</span> <span class="talk-body"><em>Interannual patterns of shoreline accretion and erosion in San Diego County as detected by CoastSat.</em> USACE ERDC (with S. Adusumilli).</span></li>
+    <li><span class="talk-year">2019</span> <span class="talk-body"><em>A scalable model for meeting the Enhanced Transparency Framework and UN Sustainable Development Goals.</em> UNFCCC COP25, Madrid.</span></li>
+    <li><span class="talk-year">2018</span> <span class="talk-body"><em>Global climate impacts of the AMOC slowdown caused by Arctic sea ice decline.</em> Yale Senior Thesis Presentations.</span></li>
+    <li><span class="talk-year">2017</span> <span class="talk-body"><em>Transport patterns of carbon monoxide from tropical South American fires as observed by MOPITT.</em> NCAR Summer Symposium.</span></li>
+  </ul>
+</section>
+
+<!-- ======= FIELD WORK ======= -->
+<section id="field">
+  <h2>Field Work</h2>
+  <p class="section-intro">
+    Most of what I know about beaches comes from spending time on them with instruments. Field days are also when most of my better ideas show up.
+  </p>
+  <p>
+    The TBR23 campaign at Torrey Pines (winter 2022 through summer 2023) was the largest of these efforts: synchronous cross-shore PUV arrays at two transects and two depths for hydrodynamics, jet-ski and vessel sonar for subaqueous bathymetry, and truck and ATV LiDAR for the subaerial profile. The follow-on TBR23&ndash;24 deployment (late spring 2023 through summer 2025) placed working altimeters, echosounders, and PUVs on a single cross-shore array at MOP586 spanning 5, 7, 10, and 15 m depth, capturing the 2023&ndash;2024 El Ni&ntilde;o winter and the recovery afterwards.
+  </p>
+  <p>
+    Smaller deployments and survey days fill in the rest. I'm out at Torrey Pines, Cardiff, and the cobble beaches of north county on a regular cadence, sometimes with the full survey kit and sometimes just with a tape measure and a notebook. In summer 2025 I led a 120-km intertidal grain-size sampling campaign from Dana Point south to Border Field (Chapter 4, above). I also occasionally help out other groups in the field; in 2023 I launched weather balloons for the <a href="https://armgov.svcs.arm.gov/research/campaigns/amf2023epcape">Eastern Pacific Cloud Aerosol Precipitation Experiment</a>.
+  </p>
+  <div class="field-gallery">
+    <figure>
+      <img src="{{ '/assets/images/la-jolla-from-water.jpg' | relative_url }}" alt="La Jolla cliffs and turquoise water on a flat day, paddleboarder offshore" />
+      <figcaption>The cliffs above Black's Beach and Torrey Pines State Beach from Scripps Pier on a calm summer day. Most field days do not look like this.</figcaption>
+    </figure>
+    <figure>
+      <img src="{{ '/assets/images/cobble-beach.jpg' | relative_url }}" alt="Cobble beach in north San Diego County with cliffs in the distance" />
+      <figcaption>Many beaches in San Diego County exhibit mixed sand-cobblestone morphologies. Sand fraction varies enormously alongshore in this region, and the dynamics of mixed sandy-cobble beaches is an area of ongoing research.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- ======= NOTES ======= -->
+<section id="notes-preview">
+  <h2>Notes</h2>
+  <p class="section-intro">
+    A slow-growing collection of theory notes, course write-ups, and field musings. Math rendered with MathJax; scanned handwritten pages linked as PDFs.
+  </p>
+  <p><a class="cta-link" href="{{ '/notes/' | relative_url }}">Browse notes &rarr;</a></p>
+</section>
+
+<!-- ======= TEACHING / MENTORING ======= -->
+<section id="teaching">
+  <h2>Teaching &amp; Mentoring</h2>
+  <p>Since 2018 I have advised six undergraduate researchers from Yale, Harvard, Arizona State, College of the Holy Cross, and Eckerd College on beach morphology, remote sensing, and sediment-transport projects. Names and project dates are on my CV.</p>
+  <p>Earlier teaching at Yale: TA for <em>Environmental Communication for Public Policy</em> and <em>Advanced Science Communication</em>; private tutoring in physics, chemistry, calculus, and statistics. At The Carbon Institute, lectures on climate dynamics, ecology, and climate policy to international audiences.</p>
+</section>
+
+<!-- ======= COLOPHON ======= -->
+<section id="colophon" class="colophon">
+  <p>Based in San Diego, where you can often find me out surveying beaches, surfing, or cycling. This site is built by hand in HTML and Jekyll, hosted on <a href="https://pages.github.com">GitHub Pages</a>.</p>
+</section>

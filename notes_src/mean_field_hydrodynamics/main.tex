@@ -1,0 +1,228 @@
+\documentclass{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{graphicx}
+
+\title{A mean-field theory derivation from the Liouville equation to hydrodynamics}
+\author{Holden Leslie-Bole}
+\date{June 2, 2024}
+
+\begin{document}
+
+\maketitle
+
+\paragraph{How to read this note.} If you are seeing these ideas for the first time, one effective pass is: (i) read each section's first paragraph and boxed equation, (ii) track only what new object is introduced in each step ($f_N \to f_s \to f \to \rho,u$), and then (iii) return for the algebraic details. The derivation itself is unchanged by this reading order; it is just a way to keep the big picture visible while the notation grows.
+
+\paragraph{The setting.} Consider a system of \(N\) interacting particles obeying Newtonian (or equivalently, Hamiltonian) mechanics. Concretely, think of the \(\sim 10^{23}\) water molecules in a glass, the electrons and ions in a tokamak plasma, or the stars in a galactic disc. In principle, the microscopic state at any instant is described by writing down the position and momentum of every particle, and Hamilton's equations evolve that information forward in time. In practice of course, nobody integrates \(\sim 10^{23}\) coupled ODEs.
+
+Macroscopically, the same systems are well described by a small handful of fields on three-dimensional physical space. Water is a fluid governed by the Navier--Stokes equations and an equation of state. The plasma supports magnetohydrodynamic pressures and currents. The galactic disc has a stellar density and a velocity dispersion satisfying the collisionless Boltzmann (Vlasov) equation. In each case, the macroscopic equations are PDEs on the usual three spatial coordinates plus time. So somewhere between \(N \sim 1\) and \(N \to \infty\), the microscopic description collapses, and a small handful of fields takes over from the \(\sim 6N\) ODEs.
+
+\paragraph{The question.} How does the collapse happen? What approximations are smuggled in along the way? This note traces one canonical path:
+\[
+\text{Hamilton} \;\longrightarrow\; \text{Liouville} \;\longrightarrow\; \text{BBGKY} \;\longrightarrow\; \text{Vlasov} \;\longrightarrow\; \text{continuity / Euler.}
+\]
+Two of the arrows are doing all the real work. The first non-trivial step replaces the genuine pairwise forces between particles with a smooth, averaged \emph{mean field}, exact only in the limit \(N \to \infty\) under an appropriate scaling. The second takes velocity moments of the resulting kinetic equation to get fluid equations on physical space. Each step is approximate, and each has to be supplied as an assumption beyond the underlying mechanics.
+
+The same path lands in different places depending on the kernel \(V\) of the interaction. For Coulomb \(V\), it gives the Vlasov--Poisson equation of plasma physics. For Newtonian gravity, it gives the Vlasov--Poisson equation of stellar dynamics. For short-range \(V\) and a re-introduced collision operator, it gives the Boltzmann equation, whose moments are Navier--Stokes.\footnote{The style of this note draws on W.R. Young's lecture notes for SIO 203C / MAE 294C (\emph{Mainly advection and diffusion}), which I had in mind for the prose. I also wrote it in part for myself, to put the steps from Liouville down to Euler on one page in the order I wished I had first seen them.}
+
+\paragraph{Background assumed.} Multivariable calculus, ordinary and partial differential equations, and exposure to classical mechanics at the level of Newton's second law. Phase space, the Hamiltonian formulation, the Liouville equation, the BBGKY hierarchy, and kinetic theory are introduced as we go.
+
+\paragraph{Two approximations to keep in view.} This whole chain has two controlled modeling moves: first, a \emph{mean-field closure} (replace explicit pair correlations by an averaged field); second, a \emph{moment closure} (replace kinetic information by finitely many fluid moments). If you keep those two moves in mind, the derivation reads as a sequence of bookkeeping steps rather than a jump in philosophy.
+
+\paragraph{Notation.} \(N\) is the number of particles, \(m\) the mass per particle, and \(d\) the spatial dimension. \(x_i \in \mathbb{R}^d\) and \(p_i \in \mathbb{R}^d\) are the position and momentum of particle \(i\). \(V(|x_i - x_j|)\) is the pairwise interaction potential. \(\rho(x, t)\) is the spatial number density and \(u(x, t)\) is the local mean velocity, both fields on \(d\)-dimensional physical space. \(f_N\) is the full \(N\)-particle phase-space density; \(f_s\) is its \(s\)-particle marginal; \(f \equiv f_1\) is the single-particle distribution governed by the Vlasov equation. \(\Phi(x, t)\) is the self-consistent mean-field potential, and \(P_{ij}(x, t)\) is the pressure tensor.
+
+\section*{1. Microscopic setup}
+
+Consider \(N\) identical particles of mass \(m\) in \(d\) spatial dimensions, with positions \(x_i \in \mathbb{R}^d\) and momenta \(p_i \in \mathbb{R}^d\). Pairwise interactions are translation-invariant, so the potential depends only on the separation: \(V(x_i, x_j) = V(|x_i - x_j|)\).
+
+To describe the system at any instant, we have to specify all the positions and all the momenta. Each particle contributes \(d\) position components and \(d\) momentum components, so the full microstate of the \(N\)-particle system is a list of \(2dN\) real numbers. We collect those numbers into a single point in a \(2dN\)-dimensional space, and we call that space the \emph{phase space} of the system. (For a single particle in 3D, phase space is 6-dimensional. For the water glass, it is roughly \(6 \times 10^{23}\)-dimensional.) As the system evolves under the equations of motion, this point traces out a trajectory through phase space.
+
+Why work in phase space rather than, say, in position-and-velocity space? Two reasons. First, in phase space the equations of motion (Hamilton's equations, just below) take a particularly clean first-order form: each coordinate has an evolution equation that depends only on the present state, with no time derivatives appearing on the right-hand side. Second, the flow these equations generate has a special geometric property, volume preservation, that we will exploit immediately to write down a transport equation for the density of trajectories. The Hamiltonian, the total energy expressed as a function of positions and momenta, is
+\begin{equation}
+H = \sum_{i=1}^N \frac{|p_i|^2}{2m} + \frac{1}{N} \sum_{i<j} V(|x_i - x_j|).
+\label{eq:hamiltonian}
+\end{equation}
+The factor of \(1/N\) on the interaction sum is referred to as the \emph{Vlasov scaling}. Without it, the total interaction energy would grow as \(N^2\) and the per-particle force as \(N\), so the limit \(N \to \infty\) would be singular. Inserting the \(1/N\) keeps the per-particle force \(O(1)\) as \(N \to \infty\), which is the regime in which the kinetic limit is well-posed. Different scalings select different limits: the Boltzmann--Grad scaling (\(N \to \infty\) with \(N r^{d-1}\) fixed, where \(r\) is the range of \(V\)) selects the dilute-gas limit instead.
+
+\section*{2. Liouville equation}
+
+We are interested not in any single trajectory but in the statistical state of the system: the probability of finding the \(N\) particles in any given configuration at time \(t\). This is captured by the \(N\)-particle phase-space density \(f_N(x_1, p_1, \ldots, x_N, p_N, t)\), defined so that
+\[
+f_N(x_1, p_1, \ldots, x_N, p_N, t)\, dx_1\, dp_1 \cdots dx_N\, dp_N
+\]
+is the probability of finding the system in a small phase-space volume around \((x_1, p_1, \ldots, x_N, p_N)\) at time \(t\). \(f_N\) is a (very high-dimensional) probability density, normalised so that \(\int f_N = 1\). The goal of this section is to derive its equation of motion.
+
+\subsection*{Hamilton's equations}
+From \eqref{eq:hamiltonian},
+\begin{equation}
+\dot{x}_i = \frac{\partial H}{\partial p_i} = \frac{p_i}{m}, \qquad
+\dot{p}_i = -\frac{\partial H}{\partial x_i} = -\frac{1}{N} \sum_{j \neq i} \nabla_{x_i} V(|x_i - x_j|).
+\label{eq:hamilton}
+\end{equation}
+These are first-order ODEs in time on the \(2dN\)-dimensional phase space. Together they define a flow: a recipe for advancing each phase-space point along its trajectory.
+
+\subsection*{Conservation of phase-space volume}
+
+The Hamiltonian flow has a special property. Treating the pair \((\dot x_i, \dot p_i)\) as the velocity of a phase-space point in the \((x_i, p_i)\) coordinates, compute the divergence of this velocity field (same idea as checking incompressibility of a fluid velocity field):
+\[
+\sum_{i=1}^N \left( \frac{\partial \dot{x}_i}{\partial x_i} + \frac{\partial \dot{p}_i}{\partial p_i} \right)
+= \sum_{i=1}^N \left( \frac{\partial^2 H}{\partial x_i\, \partial p_i} - \frac{\partial^2 H}{\partial p_i\, \partial x_i} \right) = 0.
+\]
+The two mixed partials cancel by equality of mixed partials. The Hamiltonian flow is therefore divergence-free in phase space, which means it preserves \(2dN\)-dimensional phase-space volume, i.e. any blob of initial conditions evolves into a blob of the same volume, deformed but never compressed or stretched. This statement is Liouville's theorem, in its geometric form.
+
+An important consequence is worth noting: because \(f_N\) is a density of points being advected by a volume-preserving flow, the value of \(f_N\) measured by an observer riding along a trajectory does not change with time. (If volumes were compressed, the density would have to rise to conserve probability, but here it does not.) Hence,
+\[
+\frac{d f_N}{d t} = 0
+\]
+along the flow.
+
+\subsection*{Liouville equation}
+
+Expanding the total derivative along a trajectory using the chain rule,
+\[
+\frac{d f_N}{d t} = \frac{\partial f_N}{\partial t} + \sum_{i=1}^N \left( \dot{x}_i \cdot \nabla_{x_i} f_N + \dot{p}_i \cdot \nabla_{p_i} f_N \right) = 0,
+\]
+and substituting \eqref{eq:hamilton},
+\begin{equation}
+\boxed{\;\frac{\partial f_N}{\partial t} + \sum_{i=1}^N \frac{p_i}{m} \cdot \nabla_{x_i} f_N
+- \frac{1}{N} \sum_{i=1}^N \sum_{j \neq i} \nabla_{x_i} V(|x_i - x_j|) \cdot \nabla_{p_i} f_N = 0.\;}
+\label{eq:liouville}
+\end{equation}
+\noindent\emph{Intuition.} This is a conservation law in phase space: probability is not created or destroyed, only transported by the Hamiltonian flow.
+
+This is the Liouville equation. It is exact, but it lives in \(2dN+1\) dimensions, so on its own it is not a useful description of a many-particle system.
+
+\section*{3. Reduced distributions and the BBGKY hierarchy}
+
+We do not need the full \(2dN\)-dimensional density to do physics. Most quantities of interest depend on only one or two particles at a time, so we define reduced distributions by integrating out the variables we do not need. The \(s\)-particle marginal is
+\begin{equation}
+f_s(x_1, p_1, \ldots, x_s, p_s, t) = \int f_N \prod_{k=s+1}^N dx_k\, dp_k.
+\label{eq:fs}
+\end{equation}
+This is the joint probability density for \(s\) selected particles, with the other \(N-s\) marginalised out. Most relevant for what follows is \(f_1(x, p, t)\), which is the probability density of finding any one chosen particle at \((x, p)\) at time \(t\).
+
+Integrating the \(N\)-particle Liouville equation \eqref{eq:liouville} over \(N-1\) particles (the algebra is straightforward; identical particles makes the bookkeeping easier) gives an evolution equation for \(f_1\):
+\begin{equation}
+\frac{\partial f_1}{\partial t}
++ \frac{p_1}{m} \cdot \nabla_{x_1} f_1
+- \frac{N-1}{N} \int \nabla_{x_1} V(|x_1 - x_2|) \cdot \nabla_{p_1} f_2(x_1, p_1, x_2, p_2, t)\, dx_2\, dp_2 = 0.
+\label{eq:f1evo}
+\end{equation}
+The force term contains the pair distribution \(f_2\), not \(f_1\), and not the simple density \(\rho\) we eventually want. This is no surprise, because the force on particle 1 depends on where particle 2 is, so to take the average we need the joint density of the two. But \(f_2\) is itself unknown, and writing down its evolution equation pulls in \(f_3\); the equation for \(f_3\) contains \(f_4\); and in general the equation for \(f_s\) contains \(f_{s+1}\). This open chain is the BBGKY hierarchy (Bogoliubov--Born--Green--Kirkwood--Yvon). It is exact but no easier to solve than the Liouville equation we started from.
+
+\subsection*{Closure: propagation of chaos}
+
+Mean-field theory closes the hierarchy at the lowest level by assuming the two-particle distribution factorises into a product of one-particle distributions:
+\begin{equation}
+f_2(x_1, p_1, x_2, p_2, t) \;\approx\; f_1(x_1, p_1, t)\, f_1(x_2, p_2, t).
+\label{eq:closure}
+\end{equation}
+In other words, knowing the state of particle 1 tells you nothing about the state of particle 2. Each particle is an independent draw from the same one-particle distribution. The heuristic justification is scaling: under Vlasov scaling the direct force between any specific pair is \(O(1/N)\), so any two specific particles correlate only weakly. Correlations build up only collectively, through the bulk density. If the factorisation holds at \(t=0\), it persists for all \(t\) in the limit \(N \to \infty\), a property called \emph{propagation of chaos}. Making this precise is non-trivial; for smooth \(V\) the rigorous statement is in Braun and Hepp (1977).
+
+\section*{4. Mean-field potential}
+
+Define the spatial density by marginalising \(f_1\) over momentum:
+\[
+\rho(x, t) = \int f_1(x, p, t)\, dp.
+\]
+Substituting the factorisation \eqref{eq:closure} into the \(f_1\) equation \eqref{eq:f1evo} collapses the integral over \((x_2, p_2)\) into an integral against \(\rho\). The pairwise force on a particle at \(x\) is replaced by the gradient of a smooth, averaged potential
+\begin{equation}
+\Phi(x, t) = \int V(|x - y|)\, \rho(y, t)\, dy.
+\label{eq:Phi}
+\end{equation}
+Each particle now feels the gradient of an averaged potential generated by the bulk density, in place of the discrete pair forces from its \(N-1\) neighbours. The potential \(\Phi\) is called \emph{self-consistent} because it is built from the very density \(\rho\) that the particles, moving in \(\Phi\), themselves create. The system is closed but coupled: \(\Phi\) determines how particles move, and the resulting motion determines \(\rho\), which in turn determines \(\Phi\). (The prefactor \((N-1)/N \to 1\) in the limit; the Vlasov \(1/N\) is absorbed into the integral against \(\rho\), which carries total mass \(\sim N\) before normalisation, or 1 in the convention \(\int \rho\, dx = 1\).)
+
+\section*{5. Vlasov equation}
+
+Replacing the pair-force term in \eqref{eq:f1evo} with \(-\nabla_x \Phi(x,t)\) gives a closed equation for \(f \equiv f_1\):
+\begin{equation}
+\boxed{\;\frac{\partial f}{\partial t} + \frac{p}{m} \cdot \nabla_x f - \nabla_x \Phi(x, t) \cdot \nabla_p f = 0,\;}
+\label{eq:vlasov}
+\end{equation}
+coupled to \eqref{eq:Phi} for \(\Phi\) and to \(\rho(x,t) = \int f(x,p,t)\, dp\).
+
+\noindent\emph{Intuition.} Free streaming moves probability through physical space while the mean field bends trajectories in momentum space.
+
+This is the Vlasov equation. It is a \emph{kinetic equation}: an evolution equation for a phase-space distribution \(f(x, p, t)\), one rung above the macroscopic fluid equations to come in \S 6 and one rung below the microscopic Liouville equation in \(2dN+1\) dimensions we started from. It is nonlinear (because \(\Phi\) depends on \(f\) through \(\rho\)) but lives in \(2d+1\) dimensions, down from the original \(2dN+1\).
+
+The Vlasov equation is collisionless, in that the simultaneous limit \(N \to \infty\) and Vlasov-scaled potential averages the granular two-body collisions out of the dynamics, leaving only the smooth mean field. Restoring those collisions produces a collision operator \(C[f]\) on the right-hand side; under further assumptions about the locality and independence of collisions, the result is the Boltzmann equation.
+
+\section*{6. Hydrodynamic moments}
+
+We have whittled the dimension count from \(2dN+1\) down to \(2d+1\), but we are still in phase space. The fluid equations of macroscopic physics live on the \(d+1\) physical-space-and-time coordinates only. To get there, take velocity moments. By a \emph{velocity moment} of \(f\) we mean an integral of the form \(\int g(p)\, f(x, p, t)\, dp\) for some function \(g\) of momentum: the 0th moment (\(g = 1\)) gives spatial density, the 1st moment (\(g = p/m\)) gives momentum density, and the 2nd moment (\(g = p_i p_j / m^2\)) measures spread around the mean velocity. Each successive moment integrates against a higher power of \(p\), and successive moments of the Vlasov equation produce successive equations for the macroscopic fields \(\rho\), \(u\), and so on.
+
+Define the density, momentum density, and pressure tensor:
+\begin{equation}
+\rho(x,t) = \int f\, dp,
+\qquad
+\rho(x,t)\, u(x,t) = \int \frac{p}{m}\, f\, dp,
+\qquad
+P_{ij}(x,t) = m \int \left(\frac{p_i}{m} - u_i\right)\!\left(\frac{p_j}{m} - u_j\right) f\, dp.
+\label{eq:moments}
+\end{equation}
+Here \(u(x,t)\) is the local mean velocity, the average velocity of all particles at \(x\) at time \(t\). The tensor \(P_{ij}\) measures the spread of individual particle momenta around that mean. In the limit where every particle at \(x\) moves with the same velocity \(u(x,t)\), \(P_{ij} = 0\). When there is thermal spread (e.g. a Maxwell--Boltzmann distribution), \(P_{ij}\) is the pressure tensor of fluid mechanics; for an isotropic distribution \(P_{ij} = P\,\delta_{ij}\), and \(P\) is the familiar scalar pressure.
+
+\subsection*{Zeroth moment: continuity}
+
+Integrate the Vlasov equation over all \(p\). The three terms become:
+\begin{itemize}
+\item The time-derivative term, \(\int \partial_t f\, dp = \partial_t \rho\).
+\item The spatial-transport term, \(\int (p/m) \cdot \nabla_x f\, dp = \nabla_x \cdot (\rho u)\), by definition of \(u\).
+\item The force term vanishes to zero. The integrand \(\nabla_x \Phi \cdot \nabla_p f\) can be rewritten as \(\nabla_p \cdot (f\, \nabla_x \Phi)\) because \(\Phi\) does not depend on \(p\); integrating a \(p\)-divergence over all \(p\) gives a boundary term that vanishes for any \(f\) decaying at \(|p| \to \infty\).
+\end{itemize}
+The result is the continuity equation:
+\begin{equation}
+\boxed{\;\frac{\partial \rho}{\partial t} + \nabla_x \cdot (\rho u) = 0.\;}
+\label{eq:continuity}
+\end{equation}
+\noindent\emph{Intuition.} Exactly the familiar mass-conservation statement: local accumulation plus net outflow equals zero.
+
+\subsection*{First moment: momentum balance}
+
+Multiplying \eqref{eq:vlasov} by \(p_i/m\), integrating over \(p\), using the moment identity
+\begin{equation}
+\int \frac{p_i}{m}\,\frac{p_j}{m}\, f\, dp = \rho\, u_i u_j + \frac{P_{ij}}{m}
+\label{eq:momidentity}
+\end{equation}
+(which follows from writing \(p_i/m = u_i + (p_i/m - u_i)\), expanding the product, and noting that the cross-terms integrate to zero by definition of \(u\)), and integrating by parts on the \(\nabla_p\) term,
+\begin{equation}
+\boxed{\;\frac{\partial (\rho u_i)}{\partial t} + \nabla_j (\rho u_i u_j) + \nabla_j P_{ij} = -\rho\, \partial_i \Phi.\;}
+\label{eq:momentum}
+\end{equation}
+\noindent\emph{Intuition.} This has the Euler/Navier--Stokes balance structure: inertia and stress transport on the left, body-force driving from the self-consistent field on the right.
+
+It is not closed, however: the second moment \(P_{ij}\) appears, and its evolution equation (the second moment of Vlasov) couples to a third moment, and so on. The BBGKY hierarchy mentioned earlier has reappeared at the moment level, and so a closure must be supplied by hand. The most common choices in existing literature are:
+
+\begin{itemize}
+\item \emph{Cold limit}: \(P_{ij} = 0\). All particles at \(x\) move with the same velocity \(u(x,t)\), which gives pressureless Euler with self-consistent forcing, used in cosmological N-body modelling before shell-crossing.
+\item \emph{Local thermodynamic equilibrium}: \(f\) is Maxwellian about \(u(x,t)\) at temperature \(T(x,t)\), which gives ideal-gas pressure \(P_{ij} = \rho T\, \delta_{ij}/m\) (in units \(k_B = 1\)) and recovers compressible Euler.
+\item \emph{Chapman--Enskog expansion}: retains heat flux and viscous stress at first order in mean free path, en route to Navier--Stokes.
+\end{itemize}
+
+\subsection*{Summary of the governing equations}
+
+After the two reductions (mean-field closure of BBGKY, then moment closure of Vlasov), the macroscopic state of the system is described by a density \(\rho(x,t)\) and a velocity field \(u(x,t)\) on \(d\)-dimensional physical space, satisfying
+\begin{subequations}
+\label{eq:fluid}
+\begin{align}
+\frac{\partial \rho}{\partial t} + \nabla \cdot (\rho u) &= 0, \\
+\frac{\partial (\rho u_i)}{\partial t} + \nabla_j(\rho u_i u_j) + \nabla_j P_{ij} &= -\rho\, \partial_i \Phi, \\
+\Phi(x,t) &= \int V(|x-y|)\, \rho(y,t)\, dy,
+\end{align}
+\end{subequations}
+together with a closure that determines \(P_{ij}\) in terms of \(\rho\) and \(u\). The first equation is conservation of mass, the second is conservation of momentum forced by the self-consistent mean field, and the third is the integral kernel that produces the field. The choice of \(V\) and the choice of closure together select which physical system you have.
+
+\section*{7. Examples}
+
+Three standard continuum models drop out of this construction with specific kernels.
+
+\begin{itemize}
+\item \textbf{Collisionless plasma.} \(V(r) = q^2/(4\pi\epsilon_0 r)\) in 3D. The mean-field potential satisfies Poisson's equation \(-\nabla^2 \Phi = q\rho/\epsilon_0\), giving the Vlasov--Poisson system used in plasma physics.
+\item \textbf{Self-gravitating matter.} \(V(r) = -Gm^2/r\) in 3D. Same Vlasov--Poisson structure but with attractive sign, used in stellar dynamics and dark-matter modelling.
+\item \textbf{Dilute gas with binary collisions.} Short-range \(V\) in the Boltzmann--Grad limit. The mean-field part vanishes and the kinetic equation reduces to the Boltzmann equation, whose moments yield the Navier--Stokes equations under Chapman--Enskog.
+\end{itemize}
+
+The recipe is the same in each case: start from Liouville, factorize the pair distribution, take moments, then supply a closure. The PDE that comes out depends on the kernel \(V\) and on which closure is physically justified.
+
+\end{document}

@@ -1,0 +1,294 @@
+% !TEX program = pdflatex
+\documentclass[11pt]{article}
+\usepackage{amsmath, amssymb, graphicx, physics, geometry, fancyhdr, tikz}
+\usetikzlibrary{positioning}
+\geometry{margin=1in}
+\setlength{\parskip}{0.8em}
+\setlength{\parindent}{0pt}
+\pagestyle{fancy}
+\fancyhead[L]{A Curvature-Like Diagnostic for Mean Momentum Redistribution}
+\fancyhead[R]{\thepage}
+
+\title{A Curvature-Like Diagnostic for Mean Momentum Redistribution\\in Canonical Wall-Bounded Turbulence}
+\author{Holden Leslie-Bole}
+\date{\today}
+
+\newcommand{\Ut}{\overline{U}}
+\newcommand{\uv}{\overline{u'v'}}
+\newcommand{\Ret}{Re_\tau}
+\newcommand{\kapg}{\mathcal{K}}
+\newcommand{\kapv}{\kappa_v}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We define a scalar curvature-like diagnostic $\kapg(y)$ for steady, fully developed wall-bounded turbulence by rewriting the streamwise Reynolds-averaged momentum balance as
+\begin{equation*}
+\nu \Ut''(y) - \kapg(y)\Ut^2(y) = -\frac{G}{\rho}, \qquad G=-\frac{d\bar p}{dx}>0.
+\end{equation*}
+Equivalently,
+\begin{equation*}
+\kapg(y)=\frac{\nu \Ut''(y)+G/\rho}{\Ut^2(y)}=\frac{1}{\Ut^2(y)}\frac{d\uv}{dy}.
+\end{equation*}
+The construction is an exact diagnostic reparametrization of the Reynolds-stress divergence, not a turbulence closure. It is motivated by the form of the geometric acceleration term $\Gamma^a_{bc}u^bu^c$ in curvilinear coordinates, but the scalar introduced here should be interpreted as an effective connection coefficient unless an explicit coordinate map is separately supplied. We derive $\kapg$ for laminar Poiseuille flow, the log law, Reichardt's law of the wall, Spalding's implicit profile, laminar pipe flow, and turbulent pipe-flow analogues, emphasizing signs, near-wall singular behavior, wall-unit scaling, and what the diagnostic does and does not establish.
+\end{abstract}
+
+\tableofcontents
+\newpage
+
+\section{Motivation and Scope}
+
+Turbulence remains the central open problem of classical fluid mechanics. Direct numerical simulation resolves all dynamically relevant scales but is prohibitively expensive at engineering Reynolds numbers. Reynolds-averaged Navier--Stokes (RANS) and large-eddy simulation introduce models for unresolved correlations. In the RANS setting, the closure problem appears because averaging the nonlinear convective term produces unknown fluctuation correlations, most notably the Reynolds stress $\uv$ in canonical wall-bounded shear flows.
+
+These notes ask a narrower question: given a mean velocity profile $\Ut(y)$, can the unclosed Reynolds-stress divergence be repackaged as a single scalar field with the dimensional character of a curvature? The answer is yes, algebraically. Define $\kapg(y)$ so that
+\begin{equation}
+\nu \Ut''(y) - \kapg(y)\Ut^2(y) = -\frac{G}{\rho},
+\label{eq:central}
+\end{equation}
+where $G=-d\bar p/dx>0$ is the imposed streamwise pressure forcing. Then $\kapg$ is determined by the mean profile through inversion. The construction does not predict $\Ut$ unless one supplies an independent model for $\kapg$.
+
+The value of the construction is diagnostic rather than predictive. The Reynolds-stress divergence has units of acceleration. Writing it as $\kapg\Ut^2$ isolates an inverse-length scalar from a kinematic envelope. The resulting field can be plotted in wall units and compared across Reynolds numbers and geometries. If it collapses, that collapse is not new physics by itself, but it may provide a compact way to visualize inner-layer universality and departures from canonical behavior.
+
+\paragraph{Important caveat.} A coordinate transformation alone does not solve the closure problem. The unclosed term arises because averaging and nonlinear multiplication do not commute. Navier--Stokes is already geometrically well defined in arbitrary coordinates. The present construction is therefore best read as an effective geometric diagnostic: it borrows the form of a connection coefficient multiplying $\Ut^2$, but it is not automatically the Christoffel symbol of a specified Euclidean coordinate transformation.
+
+\section{RANS Momentum Balance and Definition of $\kapg$}
+
+For steady, fully developed plane channel flow with mean velocity $\bar{\mathbf{u}}=(\Ut(y),0,0)$, the streamwise RANS equation is
+\begin{equation}
+0 = -\frac{1}{\rho}\frac{d\bar p}{dx}+\nu\frac{d^2\Ut}{dy^2}-\frac{d\uv}{dy}.
+\label{eq:RANS}
+\end{equation}
+Let
+\begin{equation}
+G=-\frac{d\bar p}{dx}>0.
+\end{equation}
+Then \eqref{eq:RANS} becomes
+\begin{equation}
+\frac{d\uv}{dy}=\frac{G}{\rho}+\nu\Ut''.
+\label{eq:uv-gradient}
+\end{equation}
+The curvature-like diagnostic is defined by
+\begin{equation}
+\boxed{\;\kapg(y)=\frac{1}{\Ut^2(y)}\frac{d\uv}{dy}
+=\frac{\nu\Ut''(y)+G/\rho}{\Ut^2(y)}.\;}
+\label{eq:kappa-def}
+\end{equation}
+Substituting \eqref{eq:kappa-def} into \eqref{eq:RANS} gives the equivalent nonlinear-looking mean equation
+\begin{equation}
+\nu\Ut''(y)-\kapg(y)\Ut^2(y)=-\frac{G}{\rho}.
+\label{eq:diagnostic-ode}
+\end{equation}
+This equation is exact once $\kapg$ is diagnosed from the same flow. It becomes a closure only if $\kapg$ is specified independently of the unknown solution.
+
+\paragraph{Wall units.} Let $u_\tau=\sqrt{\tau_w/\rho}$, $y^+=yu_\tau/\nu$, $\Ut^+=\Ut/u_\tau$, and $\delta$ be the channel half-height. For plane channel flow,
+\begin{equation}
+\frac{G}{\rho}=\frac{u_\tau^2}{\delta}.
+\end{equation}
+Writing $\Ret=u_\tau\delta/\nu$, equation \eqref{eq:kappa-def} becomes
+\begin{equation}
+\boxed{\;\kapg^+(y^+)\equiv \kapg\frac{\nu}{u_\tau}
+=\frac{d^2\Ut^+/d{y^+}^2+1/\Ret}{(\Ut^+)^2}.\;}
+\label{eq:kappa-plus-channel}
+\end{equation}
+For a zero-pressure-gradient boundary layer or for a local log-layer estimate in which the imposed pressure-gradient contribution is neglected,
+\begin{equation}
+\kapg^+\approx \frac{d^2\Ut^+/d{y^+}^2}{(\Ut^+)^2}.
+\label{eq:kappa-plus-zpg}
+\end{equation}
+
+\section{Geometric Interpretation and Its Limitation}
+
+In a general curvilinear coordinate system, the convective acceleration contains
+\begin{equation}
+u^b\nabla_b u^a=u^b\partial_bu^a+\Gamma^a_{bc}u^bu^c.
+\end{equation}
+For a mean flow whose only nonzero contravariant component is aligned with coordinate direction $1$, the relevant geometric acceleration has the form
+\begin{equation}
+\Gamma^a_{11}(\Ut)^2.
+\end{equation}
+This motivates interpreting $\kapg$ as an effective connection coefficient associated with mean-flow redistribution.
+
+However, this interpretation is only formal unless an explicit coordinate map is provided. For example, the illustrative shear transformation
+\begin{equation}
+x=\xi^1,\qquad y=\xi^2,\qquad z=\xi^3+\alpha(\xi^2)
+\end{equation}
+has $g_{11}=1$ and no dependence of the metric on $\xi^1$. Its Levi-Civita connection therefore gives $\Gamma^1_{11}=0$ and cannot generate the desired streamwise term. Thus the diagnostic $\kapg$ should not be claimed to arise from that particular transformation. A stronger future version of this argument would need either: (i) an explicit metric whose connection contains the diagnosed coefficient, or (ii) a deliberate non-Levi-Civita/effective connection formulation. The present notes adopt the second, diagnostic interpretation.
+
+\section{Canonical Inversions}
+\label{sec:inversion}
+
+\subsection{Laminar Plane Poiseuille Flow}
+
+For plates at $y=0$ and $y=h$,
+\begin{equation}
+\Ut(y)=\frac{G}{2\mu}y(h-y)=\frac{G}{2\rho\nu}y(h-y),
+\end{equation}
+so
+\begin{equation}
+\Ut''(y)=-\frac{G}{\rho\nu}.
+\end{equation}
+Therefore
+\begin{equation}
+\nu\Ut''+\frac{G}{\rho}=0,
+\end{equation}
+and
+\begin{equation}
+\boxed{\kapg(y)=0.}
+\end{equation}
+This is the basic consistency check. Laminar Poiseuille flow has no Reynolds stress, so the diagnosed curvature-like field vanishes.
+
+\subsection{The Log Layer}
+
+The canonical inner log law is
+\begin{equation}
+\Ut^+(y^+)=\frac{1}{\kapv}\ln y^+ + B,
+\end{equation}
+where $\kapv$ is the von K\'arm\'an constant. Then
+\begin{equation}
+\frac{d\Ut^+}{dy^+}=\frac{1}{\kapv y^+},\qquad
+\frac{d^2\Ut^+}{d{y^+}^2}=-\frac{1}{\kapv (y^+)^2}.
+\end{equation}
+Neglecting the pressure-gradient contribution at leading order within the local log-layer scaling gives
+\begin{equation}
+\boxed{\;\kapg^+(y^+)\approx
+-\frac{1}{\kapv (y^+)^2\left[(1/\kapv)\ln y^+ + B\right]^2}.\;}
+\label{eq:log-kappa}
+\end{equation}
+The sign is negative because the log-law curvature $d^2\Ut^+/d{y^+}^2$ is negative. The magnitude decays approximately as $(y^+)^{-2}(\ln y^+)^{-2}$. In a full channel-flow inversion, the additional $1/\Ret$ term in \eqref{eq:kappa-plus-channel} becomes relevant away from the inner asymptotic range.
+
+\subsection{Reichardt Profile}
+\label{sec:reichardt}
+
+Reichardt's empirical wall law may be written
+\begin{equation}
+\Ut^+(Y)=\frac{1}{\kapv}\ln(1+\kapv Y)+C_1\left[1-e^{-Y/C_2}-\frac{Y}{C_2}e^{-Y/C_3}\right],
+\label{eq:reichardt}
+\end{equation}
+where $Y=y^+$. Define
+\begin{equation}
+A(Y)=\frac{1}{\kapv}\ln(1+\kapv Y),\qquad
+B_R(Y)=C_1\left[1-e^{-Y/C_2}-\frac{Y}{C_2}e^{-Y/C_3}\right].
+\end{equation}
+Then
+\begin{equation}
+A'(Y)=\frac{1}{1+\kapv Y},\qquad
+A''(Y)=-\frac{\kapv}{(1+\kapv Y)^2}.
+\end{equation}
+For the wake/interpolation term,
+\begin{equation}
+B_R'(Y)=C_1\left[\frac{1}{C_2}e^{-Y/C_2}-\frac{1}{C_2}e^{-Y/C_3}+\frac{Y}{C_2C_3}e^{-Y/C_3}\right],
+\end{equation}
+\begin{equation}
+B_R''(Y)=C_1\left[-\frac{1}{C_2^2}e^{-Y/C_2}+\frac{2}{C_2C_3}e^{-Y/C_3}-\frac{Y}{C_2C_3^2}e^{-Y/C_3}\right].
+\end{equation}
+Thus
+\begin{equation}
+\boxed{\;\kapg_R^+(Y)=\frac{A''(Y)+B_R''(Y)+1/\Ret}{\left[A(Y)+B_R(Y)\right]^2}.\;}
+\label{eq:reichardt-kappa}
+\end{equation}
+For a boundary-layer-style local inversion, drop the $1/\Ret$ term. Equation \eqref{eq:reichardt-kappa} is the symbolic expression that was previously left as a differentiation exercise.
+
+Near the wall, Reichardt's profile satisfies $\Ut^+\sim Y$. The numerator in \eqref{eq:reichardt-kappa} depends on the exact composite constants and on whether the pressure-gradient term is retained. If the numerator tends to a nonzero constant, then $\kapg^+\sim Y^{-2}$. This singularity is not a physical blow-up of the stress divergence; it is caused by dividing by $(\Ut^+)^2\sim Y^2$. A nonsingular alternative would factor the stress divergence by $u_\tau^2$ rather than by $\Ut^2$.
+
+\subsection{Spalding Profile}
+
+Spalding's implicit wall law is
+\begin{equation}
+Y=F(U)=U+E\left[e^{\kapv U}-1-\kapv U-\frac{(\kapv U)^2}{2}-\frac{(\kapv U)^3}{6}\right],
+\label{eq:spalding}
+\end{equation}
+where $U=\Ut^+$ and $E=e^{-\kapv B}$. Differentiating implicitly,
+\begin{equation}
+1=F'(U)\frac{dU}{dY},\qquad
+\frac{dU}{dY}=\frac{1}{F'(U)}.
+\end{equation}
+A second derivative gives
+\begin{equation}
+\frac{d^2U}{dY^2}=-\frac{F''(U)}{[F'(U)]^3}.
+\end{equation}
+The needed derivatives are
+\begin{equation}
+F'(U)=1+E\left[\kapv e^{\kapv U}-\kapv-\kapv^2U-\frac{\kapv^3U^2}{2}\right],
+\end{equation}
+\begin{equation}
+F''(U)=E\left[\kapv^2 e^{\kapv U}-\kapv^2-\kapv^3U\right].
+\end{equation}
+Therefore the Spalding inversion is
+\begin{equation}
+\boxed{\;\kapg_S^+(Y)=\frac{-F''(U)/[F'(U)]^3+1/\Ret}{U^2},\qquad Y=F(U).\;}
+\label{eq:spalding-kappa}
+\end{equation}
+This is a parametric closed form: choose $U$, compute $Y=F(U)$, and evaluate $\kapg_S^+$. For local inner scaling or a zero-pressure-gradient boundary layer, again omit $1/\Ret$.
+
+\subsection{Laminar Pipe Flow}
+
+For a pipe of radius $R$, the laminar axial velocity is
+\begin{equation}
+\Ut(r)=\frac{G}{4\mu}(R^2-r^2)=\frac{G}{4\rho\nu}(R^2-r^2).
+\end{equation}
+The fully developed cylindrical momentum operator is
+\begin{equation}
+\nu\left[\frac{1}{r}\frac{d}{dr}\left(r\frac{d\Ut}{dr}\right)\right].
+\end{equation}
+Because
+\begin{equation}
+\frac{1}{r}\frac{d}{dr}\left(r\frac{d\Ut}{dr}\right)=-\frac{G}{\rho\nu},
+\end{equation}
+the pipe analogue
+\begin{equation}
+\kapg_p(r)=\frac{\nu r^{-1}d(r\Ut')/dr+G/\rho}{\Ut^2(r)}
+\end{equation}
+gives
+\begin{equation}
+\boxed{\kapg_p(r)=0.}
+\end{equation}
+
+\subsection{Turbulent Pipe Flow}
+
+Let $s=R-r$ be distance from the wall. In wall units, $s^+=su_\tau/\nu$. Near the wall, turbulent pipe flow obeys the same inner log-law structure as channel flow, so the leading-order near-wall diagnostic is
+\begin{equation}
+\kapg_p^+(s^+)\approx
+-\frac{1}{\kapv (s^+)^2\left[(1/\kapv)\ln s^+ + B\right]^2}.
+\end{equation}
+Away from the wall, cylindrical geometry enters through the radial diffusion operator and the total-stress distribution. A useful empirical test is therefore not whether pipe and channel $\kapg^+$ are identical everywhere, but whether they collapse over the inner range when plotted against wall distance. Deviations in the core should be expected because the outer geometry and total-stress structure differ.
+
+\section{Scaling, Limits, and Interpretation}
+
+\paragraph{Sign.} In a local log-law inversion, $\kapg^+<0$ because the mean profile is concave downward in wall units. In a full pressure-driven channel inversion, the sign depends on the competition between $d^2\Ut^+/d{y^+}^2$ and $1/\Ret$. Interpreting the sign requires keeping the pressure-gradient convention fixed.
+
+\paragraph{Near-wall singularity.} Since $\Ut^+\sim y^+$ at a no-slip wall, any finite nonzero numerator in \eqref{eq:kappa-plus-channel} produces $\kapg^+\sim (y^+)^{-2}$. This is a parametrization singularity introduced by dividing by the local mean velocity squared. It should not be interpreted as a physical singularity in the Reynolds stress.
+
+\paragraph{Inner-layer collapse.} If $\kapg^+(y^+)$ collapses across Reynolds numbers in DNS data, that collapse is equivalent to universality of the corresponding stress-gradient and mean-profile structure. Its value is visual and diagnostic: it compresses the stress-gradient field into an inverse-length quantity that can be compared across channel, pipe, and boundary-layer flows.
+
+\paragraph{Outer-layer behavior.} In outer coordinates, $\Ut$ approaches a slowly varying centerline or freestream value while curvature and stress gradients weaken. The diagnostic generally approaches small values away from the wall, although the precise asymptote depends on whether the pressure-gradient contribution is retained and on the chosen normalization.
+
+\section{Future Directions}
+\label{sec:future}
+
+\begin{enumerate}
+\item \textbf{DNS-based inversion.} Apply \eqref{eq:kappa-plus-channel} to channel-flow DNS, compute $\kapg^+(y^+)$ at several $\Ret$, and compare inner-layer collapse.
+\item \textbf{Geometry comparison.} Repeat the inversion for turbulent pipe and boundary-layer datasets. Test whether the inner diagnostic collapses while the outer diagnostic separates by geometry.
+\item \textbf{Regularized diagnostic.} Define an alternative $\widetilde{\kapg}=(d\uv/dy)/u_\tau^2$ or $(d\uv/dy)/(u_\tau^2+\Ut^2)$ to remove the no-slip singularity while preserving curvature-like dimensions.
+\item \textbf{Forward closure experiment.} Fit a simple universal form for $\kapg^+(y^+)$ and solve \eqref{eq:diagnostic-ode} forward. This would be a closure model only after the fitted $\kapg$ is specified independently of the target mean profile.
+\item \textbf{Geometric foundations.} Determine whether a physically meaningful metric, connection, or non-Levi-Civita effective geometry can reproduce the diagnosed $\kapg$ without contradicting the coordinate-invariance of Navier--Stokes.
+\end{enumerate}
+
+\section{Summary}
+
+The central diagnostic is
+\begin{equation*}
+\kapg(y)=\frac{\nu\Ut''(y)+G/\rho}{\Ut^2(y)}=\frac{1}{\Ut^2(y)}\frac{d\uv}{dy}.
+\end{equation*}
+It repackages the streamwise Reynolds-stress divergence as a curvature-like inverse-length scalar multiplying the squared mean velocity. Laminar Poiseuille and Hagen--Poiseuille flow give $\kapg=0$. The log layer gives a negative diagnostic proportional to $-(y^+)^{-2}(\ln y^+)^{-2}$ at leading order. Reichardt and Spalding profiles yield explicit differentiated forms that extend the calculation through the buffer layer. The construction is exact as a diagnostic and potentially useful as a visualization of momentum redistribution, but it is not a closure unless $\kapg$ is modeled independently. Its geometric interpretation should be treated cautiously: the simple shear coordinate map sometimes invoked for intuition does not produce the required Christoffel component.
+
+\section*{References (informal)}
+\begin{itemize}
+\item Aris, R. (1962). \textit{Vectors, Tensors, and the Basic Equations of Fluid Mechanics}. Prentice-Hall.
+\item Pope, S. B. (2000). \textit{Turbulent Flows}. Cambridge University Press.
+\item Reichardt, H. (1951). Vollst\"andige Darstellung der turbulenten Geschwindigkeitsverteilung in glatten Leitungen. \textit{ZAMM} 31, 208--219.
+\item Spalding, D. B. (1961). A single formula for the law of the wall. \textit{Journal of Applied Mechanics} 28, 455--458.
+\item Lee, M. and Moser, R. D. (2015). Direct numerical simulation of turbulent channel flow up to $Re_\tau\approx 5200$. \textit{Journal of Fluid Mechanics} 774, 395--415.
+\end{itemize}
+
+\end{document}

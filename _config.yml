@@ -1,0 +1,37 @@
+title: Holden Leslie-Bole
+description: "Physical oceanographer at Scripps Institution of Oceanography, UC San Diego. Beach morphodynamics, cross-shore sediment transport, wave–coastline interactions."
+author: Holden Leslie-Bole
+email: hlesliebole@ucsd.edu
+url: "https://holdenlesliebole.github.io"
+baseurl: ""
+
+markdown: kramdown
+kramdown:
+  math_engine: mathjax
+  syntax_highlighter: rouge
+  input: GFM
+  hard_wrap: false
+highlighter: rouge
+
+permalink: /:year/:month/:day/:title/
+
+collections:
+  notes:
+    output: true
+    permalink: /notes/:path/
+
+defaults:
+  - scope:
+      path: ""
+      type: notes
+    values:
+      layout: note
+      math: true
+
+exclude:
+  - README.md
+  - .claude/
+  - .DS_Store
+  - Gemfile
+  - Gemfile.lock
+  - vendor/

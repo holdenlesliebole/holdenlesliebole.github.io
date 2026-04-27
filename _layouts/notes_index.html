@@ -1,0 +1,26 @@
+---
+layout: default
+---
+<section id="notes">
+  <h2>{{ page.title }}</h2>
+  {% if page.intro %}<p class="section-intro">{{ page.intro }}</p>{% endif %}
+
+  {{ content }}
+
+  {% assign sorted_notes = site.notes | sort: 'date' | reverse %}
+  <ul class="note-index-list">
+    {% for note in sorted_notes %}
+    <li>
+      <span class="note-date">{% if note.date %}{{ note.date | date: "%Y %b %-d" }}{% endif %}</span>
+      <div>
+        <span class="note-title"><a href="{{ note.url | relative_url }}">{{ note.title }}</a>{% if note.tags %}{% for tag in note.tags %}<span class="note-tag">{{ tag }}</span>{% endfor %}{% endif %}</span>
+        {% if note.summary %}<span class="note-summary">{{ note.summary }}</span>{% endif %}
+      </div>
+    </li>
+    {% endfor %}
+  </ul>
+
+  {% if sorted_notes.size == 0 %}
+    <p class="section-intro">No notes yet. This section is the seed; first write-up coming soon.</p>
+  {% endif %}
+</section>

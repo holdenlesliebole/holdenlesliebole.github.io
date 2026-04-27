@@ -1,0 +1,17 @@
+---
+layout: default
+---
+<article class="note-page">
+  <h1>{{ page.title }}</h1>
+  <p class="note-meta">
+    {% if page.date %}{{ page.date | date: "%B %-d, %Y" }}{% endif %}
+    {% if page.tags %} &middot; {% for tag in page.tags %}<span class="note-tag">{{ tag }}</span>{% endfor %}{% endif %}
+  </p>
+
+  {{ content }}
+
+  <nav class="note-nav">
+    <a href="{{ '/notes/' | relative_url }}">&larr; all notes</a>
+    <a href="{{ '/' | relative_url }}">home</a>
+  </nav>
+</article>
