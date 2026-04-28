@@ -187,6 +187,7 @@ section { margin-bottom: 2.5rem; }
   margin-top: 1.75rem;
 }
 .field-gallery figure { margin: 0; }
+.field-gallery figure.full-width { grid-column: 1 / -1; }
 .field-gallery img {
   width: 100%;
   height: 240px;
@@ -196,6 +197,7 @@ section { margin-bottom: 2.5rem; }
   display: block;
   transition: filter 0.2s ease, transform 0.2s ease;
 }
+.field-gallery figure.full-width img { height: 320px; }
 .field-gallery a img:hover,
 .field-gallery img:hover {
   filter: saturate(1.05) brightness(1.02);
