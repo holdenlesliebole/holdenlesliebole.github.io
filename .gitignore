@@ -4,3 +4,24 @@ _site/
 .jekyll-metadata
 Gemfile.lock
 vendor/
+
+# LaTeX build artifacts
+*.aux
+*.bbl
+*.blg
+*.fdb_latexmk
+*.fls
+*.log
+*.lof
+*.lot
+*.nav
+*.out
+*.run.xml
+*.snm
+*.synctex.gz
+*.toc
+*-blx.bib
+
+# Personal application drafts / CV variants (not for publication)
+cv/anthropic_application_draft.md
+cv/cv_anthropic*
