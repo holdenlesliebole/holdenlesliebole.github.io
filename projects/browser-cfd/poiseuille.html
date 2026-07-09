@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Browser CFD — Plane Poiseuille (D2Q9 lattice-Boltzmann)</title>
+<style>
+  :root { --bg:#0e1117; --panel:#161b22; --ink:#e6edf3; --mut:#8b949e; --acc:#58a6ff; --good:#3fb950; --warn:#d29922; --line:#30363d; }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--bg); color:var(--ink); font:14px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif; }
+  header { padding:14px 20px; border-bottom:1px solid var(--line); }
+  h1 { font-size:17px; margin:0; font-weight:650; }
+  .sub { color:var(--mut); font-size:12.5px; margin-top:3px; }
+  .wrap { display:flex; flex-wrap:wrap; gap:18px; padding:18px 20px; align-items:flex-start; }
+  .panel { background:var(--panel); border:1px solid var(--line); border-radius:10px; padding:14px; }
+  .controls { display:flex; flex-direction:column; gap:12px; width:248px; }
+  .row { display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+  button { background:#21262d; color:var(--ink); border:1px solid var(--line); border-radius:7px; padding:7px 11px; cursor:pointer; font-size:13px; }
+  button:hover { border-color:var(--acc); }
+  button.primary { background:#1f6feb33; border-color:var(--acc); }
+  label { color:var(--mut); font-size:12px; }
+  input[type=range] { width:100%; }
+  select { background:#21262d; color:var(--ink); border:1px solid var(--line); border-radius:6px; padding:5px; }
+  canvas { display:block; image-rendering:pixelated; border-radius:6px; }
+  .field-cv { width:480px; height:320px; background:#000; border:1px solid var(--line); }
+  .plot-cv { background:#0b0f14; border:1px solid var(--line); border-radius:6px; }
+  .spark-cv { background:#0b0f14; border:1px solid var(--line); border-radius:6px; }
+  .stats { font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:12px; color:var(--mut); }
+  .stats b { color:var(--ink); font-weight:600; }
+  .kv { display:grid; grid-template-columns:auto auto; gap:2px 14px; }
+  .good { color:var(--good); } .warn { color:var(--warn); }
+  .box { font-size:12px; color:var(--mut); border-left:3px solid var(--warn); padding:6px 10px; background:#0b0f14; border-radius:0 6px 6px 0; }
+  .legend { font-size:11.5px; color:var(--mut); display:flex; gap:14px; flex-wrap:wrap; }
+  .sw { display:inline-block; width:11px; height:11px; border-radius:2px; vertical-align:-1px; margin-right:4px; }
+  h2 { font-size:13px; margin:0 0 8px; color:var(--ink); font-weight:600; }
+  .muted { color:var(--mut); }
+</style>
+</head>
+<body>
+<header>
+  <h1>Browser CFD — Plane Poiseuille flow</h1>
+  <div class="sub">Single-file D2Q9 BGK lattice-Boltzmann with Guo body forcing. Validated against the exact parabolic profile and the analytic startup transient. Case 2 of: Couette → Poiseuille → cylinder → transient growth.</div>
+</header>
+
+<div class="wrap">
+  <!-- controls -->
+  <div class="panel controls">
+    <div class="row">
+      <button id="playBtn" class="primary">▶ Play</button>
+      <button id="stepBtn">Step</button>
+      <button id="resetBtn">Reset (rest)</button>
+    </div>
+    <div>
+      <label>Reynolds number: <b id="reVal" class="stats"></b></label>
+      <input id="reSlider" type="range" min="10" max="1000" value="100" step="10" />
+      <div class="muted" style="font-size:11px">Profile shape (parabola) is fixed; the body force auto-scales to hold u_max = U, so Re only sets the transient timescale H²/ν.</div>
+    </div>
+    <div>
+      <label>Speed (steps / frame): <b id="spdVal" class="stats"></b></label>
+      <input id="spdSlider" type="range" min="1" max="300" value="60" step="1" />
+    </div>
+    <div>
+      <label>Field</label>
+      <div class="row">
+        <select id="fieldSel">
+          <option value="vel">Velocity magnitude</option>
+          <option value="vort">Vorticity / shear</option>
+        </select>
+      </div>
+    </div>
+    <div class="row">
+      <button id="perturbBtn">Inject perturbation</button>
+    </div>
+    <div class="muted" style="font-size:11px">Injects a divergence-free placeholder perturbation on the steady base and tracks E(t). The real optimal-IC injection is the transient-growth case (#20).</div>
+
+    <div class="stats kv">
+      <span>ν</span><span><b id="nuVal"></b></span>
+      <span>τ</span><span><b id="tauVal"></b></span>
+      <span>F<sub>x</sub></span><span><b id="fxVal"></b></span>
+      <span>Ma</span><span><b id="maVal"></b></span>
+      <span>grid</span><span><b id="gridVal"></b></span>
+      <span>H (lattice)</span><span><b id="hVal"></b></span>
+      <span>step</span><span><b id="stepVal"></b></span>
+      <span>ν·t / H²</span><span><b id="ndtVal"></b></span>
+      <span>mode</span><span><b id="modeVal"></b></span>
+    </div>
+  </div>
+
+  <!-- field -->
+  <div class="panel">
+    <h2>Flow field <span class="muted" id="fieldLabel"></span></h2>
+    <canvas id="field" class="field-cv" width="120" height="80"></canvas>
+    <div class="legend" id="fieldLegend" style="margin-top:8px"></div>
+  </div>
+
+  <!-- profile (hero) + validation -->
+  <div class="panel">
+    <h2>Velocity profile vs exact</h2>
+    <canvas id="plot" class="plot-cv" width="300" height="320"></canvas>
+    <div class="legend" style="margin-top:8px">
+      <span><span class="sw" style="background:#8b949e"></span>exact steady (parabola)</span>
+      <span><span class="sw" style="background:#d29922"></span>analytic transient</span>
+      <span><span class="sw" style="background:#58a6ff"></span>LBM</span>
+    </div>
+    <div class="stats" style="margin-top:10px" id="errReadout"></div>
+    <div style="margin-top:10px">
+      <h2>Perturbation energy E(t)</h2>
+      <canvas id="spark" class="spark-cv" width="300" height="70"></canvas>
+    </div>
+  </div>
+
+  <!-- envelope -->
+  <div class="panel" style="max-width:340px">
+    <h2>What this can and cannot claim</h2>
+    <div class="box">
+      Weakly-compressible LBM, valid at low Mach (Ma ≈ <span id="maBox" class="stats"></span>); error is O(Ma²).
+      No-slip walls use halfway bounce-back → 2nd-order; the body force uses Guo's scheme
+      (half-force-corrected velocity + source term).
+      <b>2D and laminar</b> — turbulence is out of envelope (the 3D energy cascade needs vortex
+      stretching, which vanishes in 2D). Plane Poiseuille is linearly unstable only above
+      Re ≈ 5772 (Orszag), far past anything here, yet it is a classic <b>transient-growth</b>
+      flow (non-modal energy gain G(t) peaks ≈ 1763) — so this case is also the substrate for
+      the later transient-growth study.
+    </div>
+  </div>
+</div>
+
+<script src="lbm.js"></script>
+<script>
+(function () {
+  'use strict';
+  const C = window.LBM_CORE;
+  const { LBM, FLUID, SOLID, poiseuilleSteady, poiseuilleTransient, poiseuilleForce, relaxFromRe } = C;
+
+  // ---- model setup ----
+  const Nx = 120, Ny = 80, U = 0.05; // U = centerline (max) velocity
+  const sim = new LBM(Nx, Ny);
+  function buildWalls() {
+    for (let i = 0; i < Nx; i++) { // both walls stationary no-slip
+      sim.flag[sim.idx(i, 0)] = SOLID;
+      sim.flag[sim.idx(i, Ny - 1)] = SOLID;
+    }
+  }
+  buildWalls();
+  const H = Ny - 2;                 // halfway-bounce-back wall separation
+  const eta = (j) => j - 0.5;       // distance of fluid node j above bottom wall
+  const baseFlow = (i, j) => [poiseuilleSteady(eta(j), U, H), 0];
+
+  let Re = 100, speed = 60, fieldMode = 'vel', mode = 'startup';
+  let running = false;
+  const eHist = []; let e0 = null; // perturbation-energy history (declared before reset() uses it)
+  function refreshRelax() {
+    const r = relaxFromRe(Re, U, H);
+    sim.omega = r.omega; sim._nu = r.nu; sim._tau = r.tau;
+    sim.Fx = poiseuilleForce(r.nu, U, H); sim.Fy = 0; // hold u_max = U as Re varies
+  }
+  function reset() {
+    sim.setEquilibrium(1.0, null); // from rest
+    mode = 'startup'; eHist.length = 0; e0 = null;
+  }
+  refreshRelax();
+  reset();
+
+  // ---- transient-growth hook: placeholder divergence-free perturbation ----
+  function injectPerturbation() {
+    const A = 0.025 * U, m = 2, kx = 2 * Math.PI * m / Nx;
+    const pert = (i, j) => {
+      const x = i, y = eta(j);
+      // streamfunction psi = A sin(kx x) sin(pi y/H)  ->  (u',v') = (psi_y, -psi_x)
+      const up = A * Math.sin(kx * x) * (Math.PI / H) * Math.cos(Math.PI * y / H);
+      const vp = -A * kx * Math.cos(kx * x) * Math.sin(Math.PI * y / H);
+      const b = baseFlow(i, j);
+      return [b[0] + up, b[1] + vp];
+    };
+    sim.injectVelocity(1.0, pert);
+    mode = 'perturb'; eHist.length = 0; e0 = null;
+  }
+
+  // ---- energy history (eHist / e0 declared above, before reset() uses them) ----
+  function recordEnergy() {
+    const E = sim.perturbationEnergy(baseFlow);
+    if (e0 === null) e0 = E > 0 ? E : 1e-30;
+    eHist.push(E / e0);
+    if (eHist.length > 600) eHist.shift();
+  }
+
+  // ---- colormaps ----
+  const visStops = [[68,1,84],[59,82,139],[33,145,140],[94,201,98],[253,231,37]];
+  function viridis(t) {
+    t = Math.max(0, Math.min(1, t)); const s = t * 4; const i = Math.min(3, Math.floor(s)); const f = s - i;
+    const a = visStops[i], b = visStops[i + 1];
+    return [a[0] + (b[0]-a[0])*f, a[1] + (b[1]-a[1])*f, a[2] + (b[2]-a[2])*f];
+  }
+  function diverging(t) { // t in [-1,1]
+    t = Math.max(-1, Math.min(1, t));
+    const lo=[33,102,172], mid=[247,247,247], hi=[178,24,43];
+    if (t < 0) { const f=t+1; return [lo[0]+(mid[0]-lo[0])*f, lo[1]+(mid[1]-lo[1])*f, lo[2]+(mid[2]-lo[2])*f]; }
+    const f=t; return [mid[0]+(hi[0]-mid[0])*f, mid[1]+(hi[1]-mid[1])*f, mid[2]+(hi[2]-mid[2])*f];
+  }
+
+  // ---- field rendering ----
+  const fcv = document.getElementById('field');
+  const off = document.createElement('canvas'); off.width = Nx; off.height = Ny;
+  const offCtx = off.getContext('2d'); const img = offCtx.createImageData(Nx, Ny);
+  const fctx = fcv.getContext('2d'); fctx.imageSmoothingEnabled = false;
+  const vort = new Float64Array(Nx * Ny);
+
+  function computeVorticity() {
+    // no-slip walls: solid-node velocity = 0, so near-wall shear comes out right
+    for (let i = 0; i < Nx; i++) {
+      const bot = sim.idx(i,0), top = sim.idx(i,Ny-1);
+      sim.ux[bot]=0; sim.uy[bot]=0; sim.ux[top]=0; sim.uy[top]=0;
+    }
+    for (let j = 1; j <= Ny-2; j++) for (let i = 0; i < Nx; i++) {
+      const ip=(i+1)%Nx, im=(i-1+Nx)%Nx;
+      const dvdx = (sim.uy[sim.idx(ip,j)] - sim.uy[sim.idx(im,j)]) * 0.5;
+      const dudy = (sim.ux[sim.idx(i,j+1)] - sim.ux[sim.idx(i,j-1)]) * 0.5;
+      vort[sim.idx(i,j)] = dvdx - dudy;
+    }
+  }
+
+  function renderField() {
+    const d = img.data;
+    const vortScale = 5 * U / H; // wall shear peaks at ~4U/H for the parabola
+    if (fieldMode === 'vort') computeVorticity();
+    for (let j = 0; j < Ny; j++) for (let i = 0; i < Nx; i++) {
+      const n = sim.idx(i, j); const p = (j * Nx + i) * 4;
+      let col;
+      if (sim.flag[n] !== FLUID) { col = [60,66,74]; }
+      else if (fieldMode === 'vel') {
+        const sp = Math.hypot(sim.ux[n], sim.uy[n]);
+        col = viridis(sp / U);
+      } else {
+        col = diverging(vort[n] / vortScale);
+      }
+      d[p]=col[0]; d[p+1]=col[1]; d[p+2]=col[2]; d[p+3]=255;
+    }
+    offCtx.putImageData(img, 0, 0);
+    // flip vertically so y points up
+    fctx.save(); fctx.scale(fcv.width / Nx, fcv.height / Ny);
+    fctx.translate(0, Ny); fctx.scale(1, -1);
+    fctx.drawImage(off, 0, 0); fctx.restore();
+  }
+
+  // ---- profile plot (hero) ----
+  const pcv = document.getElementById('plot'), pctx = pcv.getContext('2d');
+  function renderProfile() {
+    const W = pcv.width, Hc = pcv.height, m = 34;
+    pctx.clearRect(0,0,W,Hc);
+    const x0=m, x1=W-12, y0=Hc-26, y1=14;
+    const umax=1.12;
+    const X = (uN) => x0 + (uN/umax)*(x1-x0);
+    const Y = (yN) => y0 + yN*(y1-y0);
+    // axes
+    pctx.strokeStyle='#30363d'; pctx.lineWidth=1; pctx.strokeRect(x0,y1,x1-x0,y0-y1);
+    pctx.fillStyle='#8b949e'; pctx.font='11px ui-monospace,monospace';
+    pctx.fillText('u/U', (x0+x1)/2-10, Hc-8);
+    pctx.save(); pctx.translate(12,(y0+y1)/2+12); pctx.rotate(-Math.PI/2); pctx.fillText('y / H',0,0); pctx.restore();
+    [0,0.5,1].forEach(t=>{ pctx.fillText(t.toFixed(1), X(t)-6, y0+14); });
+    [0,0.5,1].forEach(t=>{ pctx.fillText(t.toFixed(1), x0-22, Y(t)+4); });
+    // exact steady parabola  u/U = 4 (y/H)(1 - y/H)
+    pctx.strokeStyle='#8b949e'; pctx.lineWidth=1.5; pctx.beginPath();
+    for (let s=0;s<=48;s++){ const yN=s/48; const uN=4*yN*(1-yN); const px=X(uN),py=Y(yN); if(s===0)pctx.moveTo(px,py); else pctx.lineTo(px,py); }
+    pctx.stroke();
+    // analytic transient curve (startup mode only)
+    if (mode==='startup') {
+      pctx.strokeStyle='#d29922'; pctx.lineWidth=1.5; pctx.beginPath();
+      for (let j=1;j<=Ny-2;j++){ const u=poiseuilleTransient(eta(j),sim.step,U,H,sim._nu)/U; const yN=eta(j)/H;
+        const px=X(u), py=Y(yN); if(j===1)pctx.moveTo(px,py); else pctx.lineTo(px,py); }
+      pctx.stroke();
+    }
+    // LBM points
+    const mid=Math.floor(Nx/2);
+    pctx.fillStyle='#58a6ff';
+    for (let j=1;j<=Ny-2;j+=2){ const u=sim.ux[sim.idx(mid,j)]/U; const yN=eta(j)/H;
+      pctx.beginPath(); pctx.arc(X(u),Y(yN),2.1,0,7); pctx.fill(); }
+  }
+
+  // ---- error readout ----
+  function profileErr(refFn) {
+    const mid=Math.floor(Nx/2); let mx=0,ss=0,c=0;
+    for(let j=1;j<=Ny-2;j++){ const e=Math.abs(sim.ux[sim.idx(mid,j)]-refFn(eta(j))); if(e>mx)mx=e; ss+=e*e; c++; }
+    return { max:100*mx/U, l2:100*Math.sqrt(ss/c)/U };
+  }
+  function renderErr() {
+    const el=document.getElementById('errReadout');
+    const st=profileErr(e=>poiseuilleSteady(e,U,H));
+    let html=`vs exact steady &nbsp; max <b class="${st.max<1?'good':'warn'}">${st.max.toFixed(3)}%</b> &nbsp; L2 <b>${st.l2.toFixed(3)}%</b>`;
+    if (mode==='startup') {
+      const tr=profileErr(e=>poiseuilleTransient(e,sim.step,U,H,sim._nu));
+      html += `<br>vs analytic transient &nbsp; max <b class="${tr.max<1.5?'good':'warn'}">${tr.max.toFixed(3)}%</b> &nbsp; L2 <b>${tr.l2.toFixed(3)}%</b>`;
+    } else {
+      html += `<br><span class="muted">transient ref N/A (perturbed IC) — watching E(t)</span>`;
+    }
+    el.innerHTML=html;
+  }
+
+  // ---- sparkline ----
+  const scv=document.getElementById('spark'), sctx=scv.getContext('2d');
+  function renderSpark() {
+    const W=scv.width,Hc=scv.height; sctx.clearRect(0,0,W,Hc);
+    sctx.strokeStyle='#30363d'; sctx.strokeRect(0.5,0.5,W-1,Hc-1);
+    if(eHist.length<2)return;
+    let mn=Infinity,mx=-Infinity; for(const v of eHist){if(v<mn)mn=v;if(v>mx)mx=v;}
+    if(mx-mn<1e-9){mx+=0.5;mn-=0.5;}
+    sctx.strokeStyle='#58a6ff'; sctx.lineWidth=1.4; sctx.beginPath();
+    for(let k=0;k<eHist.length;k++){ const x=4+(W-8)*k/(eHist.length-1); const y=Hc-6-(Hc-12)*(eHist[k]-mn)/(mx-mn);
+      if(k===0)sctx.moveTo(x,y); else sctx.lineTo(x,y); }
+    sctx.stroke();
+    sctx.fillStyle='#8b949e'; sctx.font='10px ui-monospace,monospace';
+    sctx.fillText('E/E₀ '+mx.toFixed(2)+'→'+eHist[eHist.length-1].toFixed(3), 5, 12);
+  }
+
+  // ---- stats ----
+  function renderStats() {
+    document.getElementById('reVal').textContent=Re;
+    document.getElementById('spdVal').textContent=speed;
+    document.getElementById('nuVal').textContent=sim._nu.toFixed(4);
+    document.getElementById('tauVal').textContent=sim._tau.toFixed(4);
+    document.getElementById('fxVal').textContent=sim.Fx.toExponential(2);
+    const ma=(U*Math.sqrt(3)).toFixed(4);
+    document.getElementById('maVal').textContent=ma;
+    document.getElementById('maBox').textContent=ma;
+    document.getElementById('gridVal').textContent=Nx+'×'+Ny;
+    document.getElementById('hVal').textContent=H;
+    document.getElementById('stepVal').textContent=sim.step;
+    document.getElementById('ndtVal').textContent=(sim._nu*sim.step/(H*H)).toFixed(3);
+    document.getElementById('modeVal').textContent=mode;
+    document.getElementById('fieldLabel').textContent = fieldMode==='vel' ? '— |u| (0 → U at centerline)' : '— ω (blue −, red +)';
+    document.getElementById('fieldLegend').innerHTML = fieldMode==='vel'
+      ? '<span><span class="sw" style="background:rgb(68,1,84)"></span>0</span><span><span class="sw" style="background:rgb(33,145,140)"></span>U/2</span><span><span class="sw" style="background:rgb(253,231,37)"></span>U</span>'
+      : '<span><span class="sw" style="background:rgb(33,102,172)"></span>−</span><span><span class="sw" style="background:rgb(247,247,247)"></span>0</span><span><span class="sw" style="background:rgb(178,24,43)"></span>+</span>';
+  }
+
+  // ---- main loop ----
+  function frame() {
+    if (running) { for (let s=0;s<speed;s++) sim.doStep(); recordEnergy(); }
+    renderField(); renderProfile(); renderErr(); renderSpark(); renderStats();
+    requestAnimationFrame(frame);
+  }
+
+  // ---- UI ----
+  const playBtn=document.getElementById('playBtn');
+  playBtn.onclick=()=>{ running=!running; playBtn.textContent=running?'⏸ Pause':'▶ Play'; playBtn.classList.toggle('primary',!running); };
+  document.getElementById('stepBtn').onclick=()=>{ for(let s=0;s<speed;s++)sim.doStep(); recordEnergy(); };
+  document.getElementById('resetBtn').onclick=()=>{ reset(); };
+  document.getElementById('perturbBtn').onclick=()=>{ injectPerturbation(); };
+  document.getElementById('reSlider').oninput=(e)=>{ Re=+e.target.value; refreshRelax(); };
+  document.getElementById('spdSlider').oninput=(e)=>{ speed=+e.target.value; };
+  document.getElementById('fieldSel').onchange=(e)=>{ fieldMode=e.target.value; };
+
+  frame();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Browser CFD — Flow past a cylinder (D2Q9 lattice-Boltzmann)</title>
+<style>
+  :root { --bg:#0e1117; --panel:#161b22; --ink:#e6edf3; --mut:#8b949e; --acc:#58a6ff; --good:#3fb950; --warn:#d29922; --line:#30363d; }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--bg); color:var(--ink); font:14px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif; }
+  header { padding:14px 20px; border-bottom:1px solid var(--line); }
+  h1 { font-size:17px; margin:0; font-weight:650; }
+  .sub { color:var(--mut); font-size:12.5px; margin-top:3px; }
+  .wrap { display:flex; flex-wrap:wrap; gap:18px; padding:18px 20px; align-items:flex-start; }
+  .panel { background:var(--panel); border:1px solid var(--line); border-radius:10px; padding:14px; }
+  .controls { display:flex; flex-direction:column; gap:12px; width:248px; }
+  .row { display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+  button { background:#21262d; color:var(--ink); border:1px solid var(--line); border-radius:7px; padding:7px 11px; cursor:pointer; font-size:13px; }
+  button:hover { border-color:var(--acc); }
+  button.primary { background:#1f6feb33; border-color:var(--acc); }
+  label { color:var(--mut); font-size:12px; }
+  input[type=range] { width:100%; }
+  select { background:#21262d; color:var(--ink); border:1px solid var(--line); border-radius:6px; padding:5px; }
+  canvas { display:block; image-rendering:pixelated; border-radius:6px; }
+  .field-cv { width:640px; height:280px; background:#000; border:1px solid var(--line); }
+  .plot-cv { background:#0b0f14; border:1px solid var(--line); border-radius:6px; }
+  .stats { font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:12px; color:var(--mut); }
+  .stats b { color:var(--ink); font-weight:600; }
+  .kv { display:grid; grid-template-columns:auto auto; gap:2px 14px; }
+  .good { color:var(--good); } .warn { color:var(--warn); }
+  .box { font-size:12px; color:var(--mut); border-left:3px solid var(--warn); padding:6px 10px; background:#0b0f14; border-radius:0 6px 6px 0; margin-bottom:8px; }
+  .legend { font-size:11.5px; color:var(--mut); display:flex; gap:14px; flex-wrap:wrap; }
+  .sw { display:inline-block; width:11px; height:11px; border-radius:2px; vertical-align:-1px; margin-right:4px; }
+  h2 { font-size:13px; margin:0 0 8px; color:var(--ink); font-weight:600; }
+  .muted { color:var(--mut); }
+  .big { font-size:15px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Browser CFD — Flow past a circular cylinder</h1>
+  <div class="sub">Single-file D2Q9 BGK lattice-Boltzmann. The vortex-shedding Strouhal number is measured live and compared to the Williamson (1988) correlation. Case 3 of: Couette → Poiseuille → cylinder → transient growth.</div>
+</header>
+
+<div class="wrap">
+  <!-- controls -->
+  <div class="panel controls">
+    <div class="row">
+      <button id="playBtn" class="primary">▶ Play</button>
+      <button id="resetBtn">Reset flow</button>
+    </div>
+    <div>
+      <label>Reynolds number (U·D/ν): <b id="reVal" class="stats"></b></label>
+      <input id="reSlider" type="range" min="40" max="200" value="100" step="5" />
+      <div class="muted" style="font-size:11px">Laminar 2D shedding band. Above Re ≈ 190 the real wake goes 3D — outside what a 2D sim can claim.</div>
+    </div>
+    <div>
+      <label>Speed (steps / frame): <b id="spdVal" class="stats"></b></label>
+      <input id="spdSlider" type="range" min="1" max="40" value="15" step="1" />
+    </div>
+    <div>
+      <label>Field</label>
+      <div class="row">
+        <select id="fieldSel">
+          <option value="vort">Vorticity (von Kármán street)</option>
+          <option value="vel">Velocity magnitude</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="stats kv">
+      <span>ν</span><span><b id="nuVal"></b></span>
+      <span>τ</span><span><b id="tauVal"></b></span>
+      <span>Ma</span><span><b id="maVal"></b></span>
+      <span>D (lattice)</span><span><b id="dVal"></b></span>
+      <span>grid</span><span><b id="gridVal"></b></span>
+      <span>blockage D/Ny</span><span><b id="blkVal"></b></span>
+      <span>step</span><span><b id="stepVal"></b></span>
+    </div>
+  </div>
+
+  <!-- field (hero) -->
+  <div class="panel">
+    <h2>Flow field <span class="muted" id="fieldLabel"></span></h2>
+    <canvas id="field" class="field-cv" width="320" height="140"></canvas>
+    <div class="legend" id="fieldLegend" style="margin-top:8px"></div>
+  </div>
+
+  <!-- validation + diagnostics -->
+  <div class="panel">
+    <h2>Strouhal number vs Williamson (1988)</h2>
+    <canvas id="plot" class="plot-cv" width="320" height="240"></canvas>
+    <div class="legend" style="margin-top:8px">
+      <span><span class="sw" style="background:#8b949e"></span>Williamson correlation</span>
+      <span><span class="sw" style="background:#58a6ff"></span>LBM (this run)</span>
+    </div>
+    <div class="stats" style="margin-top:10px" id="stReadout"></div>
+    <div class="stats" style="margin-top:8px" id="dragReadout"></div>
+  </div>
+
+  <!-- envelope -->
+  <div class="panel" style="max-width:340px">
+    <h2>What this can and cannot claim</h2>
+    <div class="box">
+      <b>Strouhal &amp; wake length are validated; drag is not.</b> St and the wake
+      recirculation length match the literature within a few percent. Absolute drag comes out
+      high because a browser-sized domain confines the flow and inflates form drag — so C<sub>d</sub>
+      is reported as a <b>diagnostic trend, not a pass/fail metric</b>. A validation harness that
+      only shows the numbers that pass is not validation.
+    </div>
+    <div class="box" style="border-left-color:var(--acc)">
+      <b>2D laminar band only.</b> The wake is genuinely 2D up to the Mode-A 3D instability at
+      Re ≈ 188–190 — which is exactly why the Williamson correlation is defined over Re 49–180.
+      Above it a 2D sim diverges from reality. Single-relaxation BGK also stiffens as τ → ½
+      (high Re); push Re and the field gets noisy.
+    </div>
+  </div>
+</div>
+
+<script src="lbm.js"></script>
+<script>
+(function () {
+  'use strict';
+  const C = window.LBM_CORE;
+  const { LBM, FLUID, CX, CY, OPP, williamsonSt, stampCircle } = C;
+
+  // ---- model setup (matches the validated harness config) ----
+  const Nx = 320, Ny = 140, D = 16, U = 0.05;
+  const cx = 80, cy = Math.floor(Ny / 2), R = D / 2;
+  const sim = new LBM(Nx, Ny);
+  sim.periodicX = false; sim.periodicY = false;
+  stampCircle(sim, cx, cy, R);
+
+  let Re = 100, speed = 15, fieldMode = 'vort', running = false;
+  // live Strouhal measurement state (declared before initFlow()/refreshRelax() use it)
+  const probeI = Math.round(cx + 4 * D), probeJ = cy;
+  const probeSteps = [], probeVals = [];
+  let liveSt = null;
+  const measured = {}; // Re -> St (dots remembered across the session)
+
+  function initFlow() {
+    // uniform flow + transverse blob behind the cylinder to trigger shedding promptly
+    sim.setEquilibrium(1.0, (i, j) => {
+      const dx = i - (cx + 1.5 * D), dy = j - cy;
+      const vy = 0.2 * U * Math.exp(-(dx * dx + dy * dy) / (D * D));
+      return [U, vy];
+    });
+    probeSteps.length = 0; probeVals.length = 0; liveSt = null;
+  }
+  function refreshRelax() {
+    const nu = U * D / Re;
+    sim._nu = nu; sim._tau = 3 * nu + 0.5; sim.omega = 1 / sim._tau;
+  }
+  // boundaries: top/bottom free-slip (specular), left inlet (1,U,0), right outflow
+  sim.boundary = (s) => {
+    const f = s.f;
+    for (let i = 1; i < Nx - 1; i++) {
+      const bot = i * 9, top = ((Ny - 1) * Nx + i) * 9;
+      f[bot + 2] = f[bot + 4]; f[bot + 5] = f[bot + 8]; f[bot + 6] = f[bot + 7];
+      f[top + 4] = f[top + 2]; f[top + 7] = f[top + 6]; f[top + 8] = f[top + 5];
+    }
+    for (let j = 0; j < Ny; j++) s.setNodeEquilibrium(f, (j * Nx + 0) * 9, 1, U, 0);
+    for (let j = 0; j < Ny; j++) {
+      const a = (j * Nx + (Nx - 1)) * 9, b = (j * Nx + (Nx - 2)) * 9;
+      for (let k = 0; k < 9; k++) f[a + k] = f[b + k];
+    }
+  };
+  refreshRelax();
+  initFlow();
+
+  // ---- live Strouhal measurement from a downstream probe (state declared above) ----
+  function sampleProbe() {
+    probeSteps.push(sim.step);
+    probeVals.push(sim.uy[sim.idx(probeI, probeJ)]);
+    if (probeVals.length > 800) { probeVals.shift(); probeSteps.shift(); }
+  }
+  function measureSt() {
+    if (probeVals.length < 80) return null;
+    let mean = 0; for (const v of probeVals) mean += v; mean /= probeVals.length;
+    let amp = 0; for (const v of probeVals) { const d = Math.abs(v - mean); if (d > amp) amp = d; }
+    if (amp < 3e-3 * U) return null; // shedding not established yet
+    const cross = [];
+    for (let i = 1; i < probeVals.length; i++) {
+      const a = probeVals[i - 1] - mean, b = probeVals[i] - mean;
+      if (a < 0 && b >= 0) {
+        const frac = (-a) / (b - a);
+        cross.push(probeSteps[i - 1] + frac * (probeSteps[i] - probeSteps[i - 1]));
+      }
+    }
+    if (cross.length < 3) return null;
+    const per = [];
+    for (let i = 1; i < cross.length; i++) per.push(cross[i] - cross[i - 1]);
+    per.sort((a, b) => a - b);
+    const T = per[Math.floor(per.length / 2)];
+    return D / (T * U);
+  }
+
+  // ---- drag (diagnostic only) via momentum exchange on the bounce-back links ----
+  function computeCd() {
+    const f = sim.f, flag = sim.flag;
+    let Fx = 0;
+    for (let j = 1; j < Ny - 1; j++) for (let i = 1; i < Nx - 1; i++) {
+      const n = j * Nx + i; if (flag[n] !== FLUID) continue;
+      const b = n * 9;
+      for (let k = 1; k < 9; k++) {
+        if (flag[(j + CY[k]) * Nx + (i + CX[k])] !== FLUID) Fx += CX[k] * (f[b + k] + f[b + OPP[k]]);
+      }
+    }
+    return Fx / (0.5 * U * U * D); // rho ~ 1
+  }
+
+  // ---- colormaps ----
+  function diverging(t) {
+    t = Math.max(-1, Math.min(1, t));
+    const lo=[33,102,172], mid=[10,15,22], hi=[178,24,43]; // dark midtone reads well for wakes
+    if (t < 0) { const fr=t+1; return [lo[0]+(mid[0]-lo[0])*fr, lo[1]+(mid[1]-lo[1])*fr, lo[2]+(mid[2]-lo[2])*fr]; }
+    const fr=t; return [mid[0]+(hi[0]-mid[0])*fr, mid[1]+(hi[1]-mid[1])*fr, mid[2]+(hi[2]-mid[2])*fr];
+  }
+  const visStops = [[68,1,84],[59,82,139],[33,145,140],[94,201,98],[253,231,37]];
+  function viridis(t) {
+    t = Math.max(0, Math.min(1, t)); const s = t * 4; const i = Math.min(3, Math.floor(s)); const fr = s - i;
+    const a = visStops[i], b = visStops[i + 1];
+    return [a[0]+(b[0]-a[0])*fr, a[1]+(b[1]-a[1])*fr, a[2]+(b[2]-a[2])*fr];
+  }
+
+  // ---- field rendering ----
+  const fcv = document.getElementById('field');
+  const off = document.createElement('canvas'); off.width = Nx; off.height = Ny;
+  const offCtx = off.getContext('2d'); const img = offCtx.createImageData(Nx, Ny);
+  const fctx = fcv.getContext('2d'); fctx.imageSmoothingEnabled = false;
+  const vort = new Float64Array(Nx * Ny);
+
+  function computeVorticity() {
+    for (let n = 0; n < Nx * Ny; n++) if (sim.flag[n] !== FLUID) { sim.ux[n] = 0; sim.uy[n] = 0; }
+    for (let j = 1; j < Ny - 1; j++) for (let i = 1; i < Nx - 1; i++) {
+      const dvdx = (sim.uy[sim.idx(i + 1, j)] - sim.uy[sim.idx(i - 1, j)]) * 0.5;
+      const dudy = (sim.ux[sim.idx(i, j + 1)] - sim.ux[sim.idx(i, j - 1)]) * 0.5;
+      vort[sim.idx(i, j)] = dvdx - dudy;
+    }
+  }
+  function renderField() {
+    const d = img.data;
+    const vortScale = 2 * U / D;
+    if (fieldMode === 'vort') computeVorticity();
+    for (let j = 0; j < Ny; j++) for (let i = 0; i < Nx; i++) {
+      const n = sim.idx(i, j); const p = (j * Nx + i) * 4;
+      let col;
+      if (sim.flag[n] !== FLUID) col = [150,160,172];
+      else if (fieldMode === 'vel') col = viridis(Math.hypot(sim.ux[n], sim.uy[n]) / (1.4 * U));
+      else col = diverging(vort[n] / vortScale);
+      d[p]=col[0]; d[p+1]=col[1]; d[p+2]=col[2]; d[p+3]=255;
+    }
+    offCtx.putImageData(img, 0, 0);
+    fctx.save(); fctx.scale(fcv.width / Nx, fcv.height / Ny);
+    fctx.translate(0, Ny); fctx.scale(1, -1); fctx.drawImage(off, 0, 0); fctx.restore();
+  }
+
+  // ---- St-vs-Re plot ----
+  const pcv = document.getElementById('plot'), pctx = pcv.getContext('2d');
+  function renderPlot() {
+    const W = pcv.width, Hc = pcv.height, m = 40;
+    pctx.clearRect(0,0,W,Hc);
+    const x0=m, x1=W-12, y0=Hc-26, y1=14;
+    const reLo=40, reHi=200, stLo=0.10, stHi=0.21;
+    const X = (re) => x0 + (re-reLo)/(reHi-reLo)*(x1-x0);
+    const Y = (st) => y0 + (1-(st-stLo)/(stHi-stLo))*(y1-y0);
+    pctx.strokeStyle='#30363d'; pctx.lineWidth=1; pctx.strokeRect(x0,y1,x1-x0,y0-y1);
+    pctx.fillStyle='#8b949e'; pctx.font='11px ui-monospace,monospace';
+    pctx.fillText('Re', (x0+x1)/2-8, Hc-8);
+    pctx.save(); pctx.translate(12,(y0+y1)/2+8); pctx.rotate(-Math.PI/2); pctx.fillText('St',0,0); pctx.restore();
+    [40,100,160,200].forEach(re=>pctx.fillText(re, X(re)-9, y0+14));
+    [0.10,0.15,0.20].forEach(st=>pctx.fillText(st.toFixed(2), x0-30, Y(st)+4));
+    // Williamson curve
+    pctx.strokeStyle='#8b949e'; pctx.lineWidth=1.5; pctx.beginPath();
+    for (let re=49; re<=reHi; re+=2){ const px=X(re), py=Y(williamsonSt(re)); if(re===49)pctx.moveTo(px,py); else pctx.lineTo(px,py); }
+    pctx.stroke();
+    // remembered measured dots
+    pctx.fillStyle='#1f6feb';
+    for (const re in measured){ pctx.globalAlpha=0.5; pctx.beginPath(); pctx.arc(X(+re),Y(measured[re]),2.6,0,7); pctx.fill(); }
+    pctx.globalAlpha=1;
+    // current live point
+    if (liveSt){ pctx.fillStyle='#58a6ff'; pctx.beginPath(); pctx.arc(X(Re),Y(liveSt),4.2,0,7); pctx.fill();
+      pctx.strokeStyle='#0b0f14'; pctx.lineWidth=1.5; pctx.stroke(); }
+  }
+
+  // ---- readouts ----
+  function renderReadouts() {
+    const w = williamsonSt(Re);
+    const stEl = document.getElementById('stReadout');
+    if (liveSt) {
+      const diff = 100*(liveSt-w)/w;
+      stEl.innerHTML = `St(LBM) <b class="big ${Math.abs(diff)<8?'good':'warn'}">${liveSt.toFixed(4)}</b> &nbsp; ` +
+        `Williamson <b>${w.toFixed(4)}</b> &nbsp; diff <b class="${Math.abs(diff)<8?'good':'warn'}">${(diff>=0?'+':'')+diff.toFixed(1)}%</b>`;
+    } else {
+      stEl.innerHTML = `<span class="muted">measuring… let the wake establish a few shedding cycles (Williamson St=${w.toFixed(4)})</span>`;
+    }
+    const cd = computeCd();
+    document.getElementById('dragReadout').innerHTML =
+      `C<sub>d</sub> <b>${cd.toFixed(2)}</b> <span class="muted">— diagnostic only; confined domain inflates form drag (not validated)</span>`;
+  }
+  function renderStats() {
+    document.getElementById('reVal').textContent = Re;
+    document.getElementById('spdVal').textContent = speed;
+    document.getElementById('nuVal').textContent = sim._nu.toFixed(5);
+    document.getElementById('tauVal').textContent = sim._tau.toFixed(4);
+    document.getElementById('maVal').textContent = (U*Math.sqrt(3)).toFixed(4);
+    document.getElementById('dVal').textContent = D;
+    document.getElementById('gridVal').textContent = Nx+'×'+Ny;
+    document.getElementById('blkVal').textContent = (D/Ny).toFixed(3);
+    document.getElementById('stepVal').textContent = sim.step;
+    document.getElementById('fieldLabel').textContent = fieldMode==='vort' ? '— ω (blue −, red +)' : '— |u| (0 → 1.4U)';
+    document.getElementById('fieldLegend').innerHTML = fieldMode==='vort'
+      ? '<span><span class="sw" style="background:rgb(33,102,172)"></span>−ω</span><span><span class="sw" style="background:rgb(178,24,43)"></span>+ω</span><span class="muted">cylinder grey</span>'
+      : '<span><span class="sw" style="background:rgb(68,1,84)"></span>0</span><span><span class="sw" style="background:rgb(253,231,37)"></span>1.4U</span>';
+  }
+
+  // ---- main loop ----
+  function frame() {
+    if (running) {
+      for (let s=0;s<speed;s++) sim.doStep();
+      sampleProbe();
+      const st = measureSt();
+      if (st){ liveSt = st; measured[Re] = st; }
+    }
+    renderField(); renderPlot(); renderReadouts(); renderStats();
+    requestAnimationFrame(frame);
+  }
+
+  // ---- UI ----
+  const playBtn = document.getElementById('playBtn');
+  playBtn.onclick = () => { running=!running; playBtn.textContent=running?'⏸ Pause':'▶ Play'; playBtn.classList.toggle('primary',!running); };
+  document.getElementById('resetBtn').onclick = () => { initFlow(); };
+  document.getElementById('reSlider').oninput = (e) => { Re=+e.target.value; refreshRelax(); probeSteps.length=0; probeVals.length=0; liveSt=null; };
+  document.getElementById('spdSlider').oninput = (e) => { speed=+e.target.value; };
+  document.getElementById('fieldSel').onchange = (e) => { fieldMode=e.target.value; };
+
+  frame();
+})();
+</script>
+</body>
+</html>
