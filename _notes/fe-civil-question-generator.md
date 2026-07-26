@@ -22,11 +22,26 @@ stream the worked solution, answer a follow-up in a tutor chat, locate a formula
 reference handbook, and append results to a local JSON file. Questions stream as they are
 written, so text appears immediately instead of after a wait.
 
+<figure>
+  <img src="{{ '/assets/notes/fe_setup.png' | relative_url }}" alt="The session setup screen: a topic-area dropdown set to random weighted by exam frequency, difficulty buttons for easy, medium and hard, a question-count selector, and a start button." />
+  <figcaption>Session setup. Topic area, difficulty, and session length are chosen per session; the running API spend is printed under the title.</figcaption>
+</figure>
+
 Each question returns as structured JSON: the statement, four choices, the correct letter,
 a step-by-step solution, a pointer into the FE Reference Handbook, and a subtopic label.
 The handbook pointer is the field I use most. The exam is open-handbook, and a real part
 of the skill being tested is finding the right table quickly, so a question that names the
 section it came from trains the lookup alongside the physics.
+
+<figure>
+  <img src="{{ '/assets/notes/fe_question_structural.png' | relative_url }}" alt="A generated hard structural engineering question about the flexural adequacy of a simply supported W18x50 steel beam, with a handbook pointer above the statement and four numerical answer choices below it." />
+  <figcaption>A generated question. The grey band above the statement is the handbook pointer; the four choices are built from specific mistakes rather than arbitrary numbers.</figcaption>
+</figure>
+
+<figure>
+  <img src="{{ '/assets/notes/fe_solution_structural.png' | relative_url }}" alt="The same question after answering, showing the correct choice highlighted in green and a step-by-step worked solution followed by an explanation of why each of the other three choices is wrong." />
+  <figcaption>The worked solution, with a per-distractor account of which mistake produces which wrong answer. On this problem the key and every step of the arithmetic are right; the note below is about the cases where they are not.</figcaption>
+</figure>
 
 ## The part that is not solved
 
