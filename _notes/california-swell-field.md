@@ -2,7 +2,7 @@
 title: "The California swell field: wave rays from CDIP's MOP model"
 date: 2026-07-31
 tags: [waves, visualization, cdip, mop, nearshore]
-summary: "Two browser visualizations of CDIP's MOP nearshore wave model — a live 2-D field over sixteen grids, and the 2000–present alongshore hindcast as a two-layer coastal fringe. Notes on what the gridded and alongshore products can and cannot show."
+summary: "Two browser visualizations of CDIP's MOP nearshore wave model: a live 2-D field over sixteen grids, and the 2000–present alongshore hindcast as a two-layer coastal fringe. Notes on what the gridded and alongshore products can and cannot show."
 math: true
 ---
 
@@ -18,8 +18,8 @@ look at it as a field instead.
 The first shows the current sea state as strands traced through the peak-direction
 field, over CDIP's statewide grid and all fifteen county grids, so you can zoom
 from the whole coast to ~100 m anywhere between the Mexican border and Oregon.
-The second shows the alongshore hindcast — 11,594 sites, hourly, back to
-2000 — as a fringe along the coast, with swell and sea drawn as separate layers.
+The second shows the alongshore hindcast, 11,594 sites sampled hourly back to
+2000, as a fringe along the coast with swell and sea drawn as separate layers.
 
 Neither is a new model. They are a rendering of CDIP's output, and most of the
 work went into establishing what that output does and does not support.
@@ -28,7 +28,7 @@ work went into establishing what that output does and does not support.
 
 Each strand follows the local peak direction $D_p$. In the geometric-optics
 limit that makes it a wave ray, so where strands crowd together you are looking
-at refractive focusing — the process that decides which stretch of beach takes
+at refractive focusing, the process that decides which stretch of beach takes
 the energy out of a given swell. Along a transect off Torrey Pines, $D_p$ rotates
 from 199° in 5,000 m of water to 246° at 9 m, turning toward shore normal as it
 shoals, and $H_s$ falls from 1.07 m to 0.56 m as the oblique swell spreads.
@@ -43,22 +43,22 @@ $D_p$ is the direction at the spectral peak. When a decaying swell and a rising
 wind sea carry comparable energy, the peak flips between the two systems from one
 grid cell to the next, and $D_p$ jumps tens of degrees across a sharp front. On
 one frame, cells either side of such a front differ in $T_p$ by about 6 s against
-0.05 s everywhere else — two wave systems trading places, not noise.
+0.05 s everywhere else. That is two wave systems trading places, not noise.
 
 Traced faithfully, those fronts throw adjacent strands off at wildly different
 angles and read as a rendering glitch. Smoothing $D_p$ would be worse than the
 disease: the average of two wave systems is a direction in which no wave is
-travelling. The page instead measures how well the direction field agrees with
+traveling. The page instead measures how well the direction field agrees with
 itself locally and lets the strands fade where the peak is ambiguous, so the
 field goes quiet exactly where a single direction stops describing the sea. On a
-bimodal frame that affects a few per cent of cells; smooth refraction gradients
+bimodal frame that affects a few percent of cells; smooth refraction gradients
 score at the top of the scale and are drawn in full.
 
 ## Sea and swell need the alongshore product
 
 The obvious fix for a bimodal sea is to split it. That cannot be done from the
 gridded files at any resolution. They publish bulk $H_s$, $T_p$, $T_a$ and $D_p$
-only — a `waveFrequency` dimension is present, but no data variable references
+only. A `waveFrequency` dimension is present, but no data variable references
 it, so there is no per-frequency energy density and no $a_1$/$b_1$ with which to
 partition a spectrum. The same is true of the `seaswell` grid variants, which are
 the same bulk parameters on a 20-band discretization. Publishing spectra on the
@@ -115,8 +115,8 @@ defensible shortlist rather than a definitive ordering.
 The largest nearshore wave in the set is 15.56 m, on 2024-12-23 at MOP M0486 off
 the Mendocino coast near Westport. That event is worth scrubbing through: its
 peak reaches Mendocino at 19:00 UTC and San Diego sixteen hours later, and
-Los Angeles and Orange County peak *below* San Diego — 3.76 m and 3.64 m against
-5.77 m — with Point Conception and the Channel Islands shadowing the basin while
+Los Angeles and Orange County peak *below* San Diego, 3.76 m and 3.64 m against
+5.77 m, with Point Conception and the Channel Islands shadowing the basin while
 San Diego stays open to the residual northwest.
 
 ## Scope and limits
@@ -124,7 +124,7 @@ San Diego stays open to the residual northwest.
 The strands are rays, not water-particle trajectories, and nothing here advects a
 physical parcel. The pages trace an already-computed $D_p$ field rather than
 integrating the eikonal equation, so caustics are implied rather than resolved.
-Strand pacing is scaled for legibility. Colour ranges and the wave-height scale
+Strand pacing is scaled for legibility. Color ranges and the wave-height scale
 are derived per payload, so a calm year and a stormy one are not on a common
 scale without reading the legend.
 
