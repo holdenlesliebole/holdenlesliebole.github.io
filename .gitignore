@@ -25,3 +25,7 @@ vendor/
 # Personal application drafts / CV variants (not for publication)
 cv/anthropic_application_draft.md
 cv/cv_anthropic*
+
+# Working copy of the swell project, which lives in its own repo:
+# https://github.com/holdenlesliebole/california-swell
+projects/swell/
