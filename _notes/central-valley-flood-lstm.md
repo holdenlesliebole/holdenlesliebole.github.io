@@ -35,6 +35,12 @@ and the 2023 AR sequence. Training uses every remaining day in the record outsid
 that fixed cohort, except the NWM comparison in Finding 5, which is over the five
 focus basins where the NWM reaches were extracted.
 
+
+<figure>
+  <img src="{{ '/assets/notes/cv_study_map.png' | relative_url }}" alt="Map of California with the 28 training basins colored by snow fraction; the five focus basins ringed in the high Sierra and southern Cascades; six excluded basins marked with crosses." />
+  <figcaption>The 28 training basins, colored by the fraction of precipitation falling as snow &mdash; the regime variable behind Findings 1, 3 and 5. Rings: the five focus basins. Crosses: the six basins with no flood-window observations, excluded from every cohort median.</figcaption>
+</figure>
+
 **The test-period choice is the first result.** An earlier version of this work tested on
 2012–2014 and reported median NSE 0.81. That window is California drought onset. Retrained
 and retested at the same capacity on the same 22 basins, the model scores **0.862** on the
@@ -293,7 +299,7 @@ uncertainty below 0.001 NSE, so reported differences are not ensemble-sampling n
 uncontrolled axis).
 
 That protocol exists because the closure tests kept catching real problems: a test-period
-choice that flattered skill by 0.08 NSE, an evaluation code path that silently dropped
+choice that flattered skill by 0.11 NSE, an evaluation code path that silently dropped
 over a quarter of the scoreable basins from its medians, and an upstream bug that writes corrupted
 observations into the distributional model's output files — found because two metrics
 that could not both be true appeared together, and the observations, not the model, turned
@@ -303,4 +309,4 @@ five gauges whose records genuinely disagree; those were excluded rather than si
 rescaled.
 
 Known limitations, failure modes, and the traps encountered along the way are documented in
-[`METHODS.md`](https://github.com/holdenlesliebole/central-valley-flood-lstm/blob/main/METHODS.md).
+[`METHODS.md`](https://github.com/holdenlesliebole/central-valley-flood-lstm/blob/main/docs/METHODS.md).
