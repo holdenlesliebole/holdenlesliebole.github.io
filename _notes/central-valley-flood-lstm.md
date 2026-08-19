@@ -262,13 +262,27 @@ ratio and the NaN training losses, and does not account for the coverage failure
   <figcaption>Rank histogram (PIT) of observations within the 7500-member predictive ensemble, all basins, lead 0. Dashed line: the uniform density of a calibrated ensemble.</figcaption>
 </figure>
 
-The diagnosis constrains the remedy. Uniform variance inflation widens intervals
-everywhere and still misses high-flow observations that sit above a displaced center, so
-the fix has to be flow-conditional: recalibration by flow band, or a bias-aware head.
-Whatever fixes coverage must then be re-scored against the 22–26% CRPS gain it could
-erode.
+The remedy has now been tested, with a design that doubles as a transfer experiment: an
+affine correction of the ensemble (a median shift and a spread scale, fit per band of
+predicted flow) learned on one flood water year and applied to the other, so every
+reported number is out-of-sample. Coverage recovers from 0.46–0.73 to 0.84–0.93 across
+leads, and the feared CRPS cost does not materialize: beyond one-day lead the correction
+*improves* CRPS (2.19 to 1.94 mm/day at seven days), because removing the conditional
+median bias is worth more than the widened intervals cost. The flow-conditional version
+shows its value where the failure lived: on the highest-flow third of days, raw coverage
+is 0.53 with 39% of observations escaping above the interval; the flow-conditional map
+reaches 0.86 with 13% above, beating a single global correction on both coverage and
+CRPS there. Calibration remains slightly under target at six-to-seven-day leads (0.84
+against the 0.85–0.95 band), and a correction fit on one atmospheric-river winter held
+in a different one — the transfer that an operational deployment would need.
 
 ---
+
+
+<figure>
+  <img src="{{ '/assets/notes/cv_recalibration.png' | relative_url }}" alt="Two panels: interval coverage by lead rising from below 0.73 raw to between 0.84 and 0.94 after recalibration, and fair CRPS by lead showing the recalibrated variants at or below the raw curve beyond lead one." />
+  <figcaption>Coverage (left) and fair CRPS (right) by lead on the flood test years: raw ensemble vs global and flow-conditional affine recalibration, each window scored with parameters fit on the other window. Shaded band: 85&ndash;95% acceptance range.</figcaption>
+</figure>
 
 ## Finding 5 — The benchmark win depends on the benchmark
 
@@ -349,11 +363,12 @@ Mill Creek inversion and the NWM's peak wins both point. In this scenario the
 complementarity result reads as operational advice: run both model families, and weight
 the process model's peak estimates.
 
-The calibration failure lands exactly where such a winter would be lived. The
-distributional head's intervals are overconfident specifically at high flows, where
-observations escape above the interval seven times more often than below. Until
-recalibration is done flow-conditionally, the intervals have no place in
-atmospheric-river decision-making.
+The calibration failure lands exactly where such a winter would be lived, and it is
+the one boundary that has now been moved. Raw, the intervals miss above the interval
+seven times more often than below at high flows; recalibrated flow-conditionally (fit
+on one AR winter, tested on the other), high-flow coverage rises from 0.53 to 0.86 at
+no CRPS cost beyond one-day lead. The corrected intervals are usable; the uncorrected
+ones are not.
 
 What survives is the 2-to-7-day window, and it is not a consolation prize. That window
 is the decision horizon for [forecast-informed reservoir operations](https://cw3e.ucsd.edu/firo/) (FIRO), the
@@ -378,7 +393,7 @@ on an event beyond its training distribution.
 | 1-day forecast | **No** on snowmelt/high-storage basins — the gauge is better, and free; on rain-driven basins the LSTM already wins at day 1 |
 | Flood peak magnitude | **Not yet** — and the process model largely shares the failure |
 | Ungauged basin in an unseen regime | **No** — skill inverts |
-| Calibrated uncertainty | **Not yet** — but most fixable, and the sharpness gain (22–26% CRPS) is real |
+| Calibrated uncertainty | **Yes, after correction** — a cross-winter affine recalibration restores 0.84–0.93 coverage and improves CRPS beyond 1-day lead; slightly under target at 6–7 days |
 | Replacing the process model | **No** — the v3.0 retrospective wins WY2017 on 3 of 5 basins; the models are complementary by regime |
 
 The strongest claim this work supports is narrower than "ML beats the operational
