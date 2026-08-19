@@ -397,9 +397,25 @@ the precipitation ratio; the cohort's peaks land pressed against the training ce
 median 0.91 of record, 41% of basins just above it, none beyond 1.28 times. A megaflood
 scenario read through this model produces record-adjacent flows, not megaflood flows.
 That is Finding 2's dose–response curve continued past its last data point, now
-measured on the far side of the data edge. (No observed truth exists for a synthetic
-storm, so these are structural conclusions about response scaling, not verified peaks;
-WRF forcing also carries its own biases relative to the training products.)
+measured on the far side of the data edge.
+
+The scenario archive supplies its own process-model reference: WRF's land-surface
+runoff for the same two storms. It is unrouted, so only the amplification ratio is
+comparable — and there the contrast is direct. From the historical to the 2072 storm,
+precipitation grows 1.45×, WRF's surface-runoff peaks grow a median of 2.4× (an order
+of magnitude at the snow-line basins), and the LSTM's peaks grow 1.59×. Where the
+scenario stays in-regime the two models bracket each other; where it leaves the
+training distribution, the physics keeps amplifying and the learned mapping does not.
+The ceiling belongs to the model, not the meteorology. (No observed truth exists for a
+synthetic storm, so these are structural conclusions about response scaling, not
+verified peaks; WRF forcing carries its own biases relative to the training products,
+and unrouted runoff overstates amplification somewhat, which is why the claim is
+directional.)
+
+<figure>
+  <img src="{{ '/assets/notes/cv_arkstorm_amplification.png' | relative_url }}" alt="Log-log scatter of LSTM peak amplification versus WRF surface-runoff amplification across 22 basins; most points sit well below the one-to-one line, with WRF ratios reaching 45 while LSTM ratios stay below 9." />
+  <figcaption>Hist&rarr;future peak amplification per basin: WRF surface runoff (unrouted) vs the LSTM. Gray line 1:1; dotted line: median precipitation ratio (1.45). Log axes.</figcaption>
+</figure>
 
 ---
 
