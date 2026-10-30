@@ -582,6 +582,21 @@ section { margin-bottom: 2.5rem; }
 .note-page figure {
   margin: 1.5rem 0;
 }
+/* Figures wider than the text column (animations with small labels), centered on the page. */
+.note-page figure.wide {
+  width: max(100%, min(1100px, calc(100vw - 4rem)));
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
+}
+.note-page video {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: 1px solid var(--rule);
+  border-radius: 2px;
+  background: var(--bg-soft);
+}
 .note-page figcaption {
   font-family: 'Inter', sans-serif;
   font-size: 0.82rem;
