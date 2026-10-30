@@ -24,19 +24,24 @@ all years over the same stretch of the calendar.
 <video controls muted loop playsinline preload="none" poster="/assets/notes/sd-annual-cycle/san_diego_air.jpg">
 <source src="/assets/notes/sd-annual-cycle/san_diego_air.mp4" type="video/mp4">
 </video>
-<figcaption>Daily mean air temperature, (Tmax + Tmin)/2, NOAA GHCN-Daily. Downtown San Diego to June 1939, Lindbergh Field after. 15-day running mean.</figcaption>
+<figcaption>Daily mean air temperature, (Tmax + Tmin)/2, NOAA GHCN-Daily. Downtown San Diego to June 1939, Lindbergh Field after. Each month shifted to NOAA's homogenized monthly mean (GHCN-Monthly v4). 15-day running mean.</figcaption>
 </figure>
 
 There is no long air record in La Jolla, so this uses the downtown and airport stations
 that the National Weather Service splices for San Diego's official record. Across the two
-stations, the trailing 30-year mean rose from 61.1 °F (1875–1904) to 64.4 °F (1996–2026). The warmest calendar
-years are 2014 and 2015, both at 67.5 °F, and 2026 through October 26 ranks third of 152.
+stations, the trailing 30-year mean rose from 59.8 °F (1875–1904) to 63.5 °F (1996–2026).
+The warmest calendar years are 2014 (66.4 °F) and 2015 (66.3 °F). From January 1 through
+October 26, 2026 is the warmest of 143 years, at 68.0 °F against 67.7 °F for 2015.
 
-Lindbergh Field reads warm from February 1976 to May 1985. NOAA's homogenization of the
-monthly record puts the step at 2.63 °F, and I subtracted it. Its size agrees with three
-estimates of my own (2.2 to 2.5 °F) from Scripps Pier water temperature and seven nearby
-stations. Uncorrected, 1984, 1981 and 1983 would rank third, fourth and fifth. NOAA finds five smaller breaks in this record that I have not corrected,
-so this is not a fully homogenized series.
+The record follows NOAA's homogenized version of it (GHCN-Monthly v4), which adjusts for
+seven breaks from station and instrument changes. Each month's daily values are shifted so
+the month averages to NOAA's adjusted value. That puts the whole record on the station's
+level since November 2021, so readings before then sit 0.5 to 3.9 °F below the raw values.
+The largest break is a warm period at Lindbergh from the mid-1970s to 1985, which my own comparisons
+against Scripps Pier water temperature and seven nearby stations size at 2.2 to 2.5 °F,
+against NOAA's 2.6 °F. NOAA leaves out 71 months it cannot place on either side of a break,
+so 1930, 1932–35, 1969, 1976–77 and 1984–85 are drawn with gaps and not ranked. Without the
+adjustments, Lindbergh warms 1.2 °F from 1940–69 to 1996–2025; with them, 2.7 °F.
 
 ## Scripps Pier water temperature, 1917–2026
 
@@ -95,11 +100,12 @@ totals. The wettest is 1883–84 at 26.06 in, then 1940–41 and 2004–05. The 
 
 ## Checks
 
-The pipeline has twelve synthetic tests. Each feeds a constructed series with a known
+The pipeline has thirteen synthetic tests. Each feeds a constructed series with a known
 answer through the same routines that make the figures, and each was broken on purpose
 once to confirm it fails. They cover the smoothing, the leap-day handling, the
-monthly-mean rule, the partial-year ranking, the Lindbergh correction, the water-year
-totals, and the 24-hour daily mean.
+monthly-mean rule, the partial-year ranking, the shift to NOAA's monthly means, the
+water-year totals, and the 24-hour daily mean. The air record's calendar-year means match
+NOAA's adjusted record to within 0.002 °F in all 141 years both can rank.
 
 The top leaderboard values were recomputed by a separate route: 2015 sea level from
 monthly means of the raw hourly heights, and the wettest water years from a second copy of
@@ -107,5 +113,10 @@ the rain record obtained through NOAA's ACIS service. That copy matches the GHCN
 used here on all 62,047 days they share.
 
 What these figures do not show: trends with uncertainties, an attribution of any of these
-changes, or a correction for station moves and instrument changes beyond the one Lindbergh
-step.
+changes, or any homogenization of the water temperature, sea level or rain records. The air
+record's homogenization is NOAA's, applied as described above, not one I have checked break
+by break.
+
+*Updated October 30, 2026: the first version of this page corrected only the 1976–85
+Lindbergh break. The air record now follows NOAA's full homogenization, which changed its
+leaderboard values and moved 2026 from third to first.*
